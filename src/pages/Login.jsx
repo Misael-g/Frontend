@@ -1,108 +1,210 @@
 import { useState } from "react"
 import { MdVisibility, MdVisibilityOff } from "react-icons/md"
+import { FaBookOpen } from "react-icons/fa"
 import { Link } from "react-router"
-
 
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="flex flex-col sm:flex-row h-screen">
+        <>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+                :root {
+                    --primary: #1a3a5c;
+                    --accent: #e8a020;
+                    --light-bg: #f5f0e8;
+                    --border: #d4c9b0;
+                    --text-muted: #5a6a7a;
+                }
+                .unib-display { font-family: 'Playfair Display', serif; }
+                .unib-body { font-family: 'DM Sans', sans-serif; }
+                .input-field {
+                    width: 100%;
+                    border: 1.5px solid var(--border);
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    font-family: 'DM Sans', sans-serif;
+                    font-size: 0.9rem;
+                    color: #1a2332;
+                    background: #fff;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    outline: none;
+                }
+                .input-field:focus {
+                    border-color: var(--primary);
+                    box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+                }
+                .btn-primary {
+                    background: var(--primary);
+                    color: #fff;
+                    font-family: 'DM Sans', sans-serif;
+                    font-weight: 600;
+                    border-radius: 8px;
+                    padding: 11px;
+                    width: 100%;
+                    border: none;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    text-align: center;
+                    display: block;
+                    text-decoration: none;
+                }
+                .btn-primary:hover {
+                    background: #0f2540;
+                    transform: translateY(-1px);
+                    box-shadow: 0 6px 18px rgba(26,58,92,0.25);
+                }
+                .panel-bg {
+                    background: var(--primary);
+                    position: relative;
+                    overflow: hidden;
+                }
+                .panel-bg::before {
+                    content: '';
+                    position: absolute;
+                    top: -80px; right: -80px;
+                    width: 300px; height: 300px;
+                    border-radius: 50%;
+                    background: rgba(232,160,32,0.15);
+                }
+                .panel-bg::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -60px; left: -60px;
+                    width: 240px; height: 240px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.05);
+                }
+            `}</style>
 
-            {/* Imagen */}
-            <div className="hidden sm:block sm:w-1/2 bg-[url('/public/images/doglogin.jpg')] bg-cover bg-center"></div>
+            <div className="flex flex-col sm:flex-row h-screen">
 
-
-            <div className="w-full sm:w-1/2 flex justify-center items-center bg-white">
-
-                <div className="w-4/5">
-
-                    <h1 className="text-3xl font-semibold text-center text-gray-500">Bienvenido(a)</h1>
-                
-                    <p className="text-gray-400 text-center my-4">Por favor ingresa tus datos</p>
-
-
-                    {/* Formulario */}
-                    <form>
-
-                        {/* Campo Correo */}
-                        <div className="mb-3">
-                            <label className="block text-sm font-semibold mb-1">Correo electrónico</label>
-                            <input
-                                type="email"
-                                placeholder="Ingresa tu correo"
-                                className="w-full rounded-md border border-gray-300 focus:ring-1 px-2 py-1 text-gray-500"
-                            />
-                        </div>
-
-
-                        {/* Campo Contraseña */}
-                        <div className="mb-3">
-                            
-                            <label className="block text-sm font-semibold mb-1">Contraseña</label>
-
-                            <div className="relative">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="************"
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10"
-                                />
-
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                                >
-                                    {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
-                                </button>
+                {/* Panel lateral */}
+                <div className="panel-bg hidden sm:flex sm:w-1/2 flex-col items-center justify-center text-white p-12 relative z-10">
+                    <FaBookOpen style={{fontSize:'5rem', color:'var(--accent)', marginBottom:'24px'}} />
+                    <h1 className="unib-display text-4xl font-black mb-4 text-center">
+                        Uni<span style={{color:'var(--accent)'}}>Books</span>
+                    </h1>
+                    <p className="unib-body text-blue-100 text-center text-base leading-relaxed max-w-xs">
+                        La plataforma de libros académicos de segunda mano para la comunidad de la Escuela Politécnica Nacional.
+                    </p>
+                    <div className="mt-10 flex flex-col gap-3 w-full max-w-xs">
+                        {[
+                            'Publicación sencilla de libros',
+                            'Búsqueda por título o autor',
+                            'Contacto directo entre usuarios',
+                        ].map((t, i) => (
+                            <div key={i} className="unib-body flex items-center gap-3 text-sm text-blue-100">
+                                <span className="w-2 h-2 rounded-full flex-shrink-0"
+                                    style={{background:'var(--accent)'}}></span>
+                                {t}
                             </div>
+                        ))}
+                    </div>
+                </div>
+
+
+                {/* Formulario */}
+                <div className="w-full sm:w-1/2 flex justify-center items-center bg-white px-6">
+                    <div className="w-full max-w-sm">
+
+                        {/* Logo móvil */}
+                        <h2 className="unib-display text-3xl font-black text-center mb-1 sm:hidden"
+                            style={{color:'var(--primary)'}}>
+                            Uni<span style={{color:'var(--accent)'}}>Books</span>
+                        </h2>
+
+                        <h3 className="unib-display text-2xl font-bold mb-1" style={{color:'var(--primary)'}}>
+                            Bienvenido(a)
+                        </h3>
+                        <p className="unib-body text-sm mb-7" style={{color:'var(--text-muted)'}}>
+                            Por favor ingresa tus datos para continuar
+                        </p>
+
+                        <form>
+
+                            {/* Correo */}
+                            <div className="mb-4">
+                                <label className="unib-body block text-sm font-semibold mb-1.5"
+                                    style={{color:'var(--primary)'}}>
+                                    Correo electrónico
+                                </label>
+                                <input
+                                    type="email"
+                                    placeholder="Ingresa tu correo"
+                                    className="input-field"
+                                />
+                            </div>
+
+                            {/* Contraseña */}
+                            <div className="mb-5">
+                                <label className="unib-body block text-sm font-semibold mb-1.5"
+                                    style={{color:'var(--primary)'}}>
+                                    Contraseña
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••••••"
+                                        className="input-field pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-3 flex items-center"
+                                        style={{color:'var(--text-muted)'}}
+                                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    >
+                                        {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <Link to="/dashboard" className="btn-primary">
+                                Iniciar sesión
+                            </Link>
+
+                        </form>
+
+
+                        {/* Separador */}
+                        <div className="unib-body flex items-center gap-3 my-5">
+                            <hr className="flex-1" style={{borderColor:'var(--border)'}} />
+                            <span className="text-xs" style={{color:'var(--text-muted)'}}>O</span>
+                            <hr className="flex-1" style={{borderColor:'var(--border)'}} />
                         </div>
 
+                        {/* Google */}
+                        <button className="unib-body w-full flex items-center justify-center gap-3 py-2.5 rounded-lg text-sm font-medium border transition-all hover:bg-gray-50"
+                            style={{borderColor:'var(--border)', color:'var(--primary)'}}>
+                            <img className="w-5" src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google" />
+                            Continuar con Google
+                        </button>
 
-                        {/* Botón login */}
-                        <Link to="/dashboard" className="block w-full py-2 text-center bg-gray-500 text-white rounded-xl hover:bg-gray-900 duration-300">
-                            Iniciar sesión
-                        </Link>
+                        {/* Links */}
+                        <div className="mt-5">
+                            <Link to="/forgot/id" className="unib-body text-xs underline"
+                                style={{color:'var(--text-muted)'}}>
+                                ¿Olvidaste tu contraseña?
+                            </Link>
+                        </div>
 
-                    </form>
+                        <div className="unib-body mt-4 flex justify-between items-center text-sm">
+                            <Link to="/" className="underline" style={{color:'var(--text-muted)'}}>Regresar</Link>
+                            <Link to="/register"
+                                className="px-5 py-2 rounded-lg font-semibold text-white text-sm"
+                                style={{background:'var(--primary)'}}>
+                                Registrarse
+                            </Link>
+                        </div>
 
-
-                    {/* Separador */}
-                    <div className="mt-6 flex items-center text-gray-400">
-                        <hr className="flex-1" />
-                        <span className="px-2 text-sm">O</span>
-                        <hr className="flex-1" />
                     </div>
-
-
-                    {/* Botón Google */}
-                    <button className="w-full mt-5 flex items-center justify-center border py-2 rounded-xl text-sm hover:bg-black hover:text-white">
-                        <img className="w-5 mr-2" src="https://cdn-icons-png.flaticon.com/512/281/281764.png" />
-                        Sign in with Google
-                    </button>
-
-
-                    {/* Enlace para olvidaste tu contraseña */}
-                    <div className="mt-5 text-xs border-b-2 py-4 text-left">
-                        <Link to="/forgot/id" className="underline text-gray-400 hover:text-gray-900">
-                            ¿Olvidaste tu contraseña?
-                        </Link>
-                    </div>
-
-
-
-                    {/* Enlaces para volver o registrarse */}
-                    <div className="mt-3 flex justify-between text-sm">
-                        <Link to="/" className="underline text-gray-400 hover:text-gray-900">Regresar</Link>
-                        <Link to="/register" className="py-2 px-5 bg-gray-600 text-white rounded-xl hover:bg-gray-900">Registrarse</Link>
-                    </div>
-
-
+                    
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
