@@ -1,205 +1,326 @@
-import logoDarkMode from '../assets/dark.png'
-import logoDogCatMain from '../assets/dogmain.png'
-import AppStoreImage from '../assets/appstore.png'
-import GooglePlayImage from '../assets/googleplay.png'
-import logoDog from '../assets/dog-hand.webp'
 import { Link } from 'react-router'
-import { MdDashboard } from "react-icons/md";
-import { FaRobot } from "react-icons/fa";
-import { BsCashCoin } from "react-icons/bs";
-import { FaCommentSms } from "react-icons/fa6";
-import { TbDog } from "react-icons/tb";
-import { FaUserDoctor } from "react-icons/fa6";
-import { GiMedicines } from "react-icons/gi";
-import { FaFacebook } from "react-icons/fa";
-import { FaSquareInstagram } from "react-icons/fa6";
-import { FaXTwitter } from "react-icons/fa6";
-
+import { MdSearch, MdMenuBook, MdManageAccounts, MdVisibility, MdEmail } from "react-icons/md";
+import { FaBookOpen, FaExchangeAlt, FaUserGraduate } from "react-icons/fa";
+import { FaFacebook, FaSquareInstagram } from "react-icons/fa6";
 
 export const Home = () => {
     return (
         <>
-            <header className="container mx-auto h-40 text-center py-4 md:flex justify-between items-center px-4 md:h-15">
-                <h1 className='font-bold text-2xl my-2 text-amber-700'>Smart<span className='text-black'>VET</span></h1>
-                <ul className='flex gap-5 justify-center my-4 flex-wrap'>
-                    <li><a href="#" className='font-bold hover:text-amber-700 hover:underline'>Home</a></li>
-                    <li><a href="#" className='font-bold hover:text-amber-700 hover:underline'>About US</a></li>
-                    <li><a href="#" className='font-bold hover:text-amber-700 hover:underline'>Services</a></li>                    <li><a href="#" className='font-bold hover:text-amber-700 hover:underline'>Contact</a></li>
-                </ul>
-                <ul className='flex justify-center items-center gap-5 my-4'>
-                    <li><img src={logoDarkMode} alt="logo" width={35} height={35} />
-                    </li>
-                </ul>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+                :root {
+                    --primary: #1a3a5c;
+                    --accent: #e8a020;
+                    --light-bg: #f5f0e8;
+                    --white: #ffffff;
+                    --text-dark: #1a2332;
+                    --text-muted: #5a6a7a;
+                    --border: #d4c9b0;
+                }
+
+                .unib-font-display { font-family: 'Playfair Display', serif; }
+                .unib-font-body { font-family: 'DM Sans', sans-serif; }
+
+                .hero-section {
+                    background: var(--primary);
+                    position: relative;
+                    overflow: hidden;
+                }
+                .hero-section::before {
+                    content: '';
+                    position: absolute;
+                    top: -60px; right: -60px;
+                    width: 320px; height: 320px;
+                    border-radius: 50%;
+                    background: rgba(232,160,32,0.12);
+                }
+                .hero-section::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -80px; left: -40px;
+                    width: 260px; height: 260px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.05);
+                }
+
+                .btn-accent {
+                    background: var(--accent);
+                    color: var(--primary);
+                    font-weight: 700;
+                    font-family: 'DM Sans', sans-serif;
+                    transition: all 0.25s;
+                }
+                .btn-accent:hover {
+                    background: #cf8e18;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(232,160,32,0.3);
+                }
+
+                .section-divider {
+                    position: relative;
+                    text-align: center;
+                    margin: 48px 0 32px;
+                }
+                .section-divider::before {
+                    content: '';
+                    position: absolute;
+                    top: 50%; left: 0; right: 0;
+                    height: 2px;
+                    background: var(--border);
+                }
+                .section-divider span {
+                    position: relative;
+                    background: var(--light-bg);
+                    padding: 0 20px;
+                    font-family: 'Playfair Display', serif;
+                    font-size: 1.75rem;
+                    font-weight: 700;
+                    color: var(--primary);
+                }
+
+                .feature-card {
+                    background: var(--white);
+                    border: 1.5px solid var(--border);
+                    border-radius: 12px;
+                    padding: 28px 24px;
+                    transition: all 0.25s;
+                }
+                .feature-card:hover {
+                    border-color: var(--accent);
+                    box-shadow: 0 6px 24px rgba(26,58,92,0.10);
+                    transform: translateY(-4px);
+                }
+                .feature-icon {
+                    width: 52px; height: 52px;
+                    border-radius: 50%;
+                    background: var(--light-bg);
+                    display: flex; align-items: center; justify-content: center;
+                    margin-bottom: 16px;
+                    color: var(--primary);
+                    font-size: 1.5rem;
+                }
+
+                .nav-link {
+                    font-family: 'DM Sans', sans-serif;
+                    font-weight: 500;
+                    color: var(--text-muted);
+                    transition: color 0.2s;
+                    text-decoration: none;
+                }
+                .nav-link:hover { color: var(--primary); }
+
+                .footer-area {
+                    background: var(--primary);
+                    color: rgba(255,255,255,0.85);
+                }
+            `}</style>
+
+            {/* NAVBAR */}
+            <header className="unib-font-body bg-white border-b border-gray-200 sticky top-0 z-50">
+                <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+                    <h1 className="unib-font-display text-2xl font-bold" style={{color:'var(--primary)'}}>
+                        Uni<span style={{color:'var(--accent)'}}>Books</span>
+                    </h1>
+                    <nav className="hidden md:flex gap-8">
+                        <a href="#hero" className="nav-link">Inicio</a>
+                        <a href="#about" className="nav-link">Nosotros</a>
+                        <a href="#features" className="nav-link">Funcionalidades</a>
+                        <a href="#contact" className="nav-link">Contacto</a>
+                    </nav>
+                    <div className="flex gap-3">
+                        <Link to="/login" className="unib-font-body px-4 py-2 rounded-lg font-medium text-sm"
+                            style={{color:'var(--primary)', border:'1.5px solid var(--primary)'}}>
+                            Iniciar sesión
+                        </Link>
+                        <Link to="/register" className="btn-accent px-4 py-2 rounded-lg text-sm">
+                            Registrarse
+                        </Link>
+                    </div>
+                </div>
             </header>
 
 
-
-            <main className='text-center py-6 px-8 bg-red-50  md:text-left md:flex justify-between items-center gap-10 md:py-1'>
-                <div className=''>
-                    <h1 className='font-lato font-extrabold text-amber-800 uppercase text-4xl my-4 md:text-6xl'>Intelligent software</h1>
-
-                    <p className='font-bold text-left my-8 md:text-2xl underline'>Powered by</p>
-
-                    <p className='text-2xl my-6 font-sans'>Artificial intelligence, Payment gateway, Realtime chat and much more...</p>
-
-                    <Link to="/login" href="#" className='block bg-amber-800 w-40 py-2 mx-auto text-white rounded-2xl text-center sm:mx-0 hover:bg-amber-700'>Get started</Link>
-
-                    <p className='font-bold text-left my-4 md:text-2xl'>Find us</p>
-
-                    <div className="flex justify-center gap-4">
-                        <a href="#">
-                            <img src={AppStoreImage} alt="App Store" />
-                        </a>
-                        <a href="#">
-                            <img src={GooglePlayImage} alt="Google Play" />
-                        </a>
-                    </div>
-                </div>
-                <div className='hidden md:block'>
-                    <img src={logoDogCatMain} alt="smart" />
-                </div>
-            </main>
-
-
-            <section className='container mx-auto px-4'>
-
-                <div className='container mx-auto relative mt-6'>
-                    <h2 className='font-semibold text-3xl relative z-1 w-50 text-center mx-auto bg-white'>ABOUT US</h2>
-                    <div className='text-amber-900 border-2 absolute top-1/2 w-full z-0' />
-                </div>
-
-                <div className='my-10 flex flex-col gap-10 items-center sm:flex-row sm:justify-around sm:items-center'>
-
-                    <div className='sm:w-1/2'>
-                        <img src={logoDog} alt="App Store" className='w-full h-full object-cover' />
-                    </div>
-
-                    <div className='px-10 sm:w-1/2'>
-                        <p className='my-4'>SmartVET is the first software on the market that includes
+            {/* HERO */}
+            <section id="hero" className="hero-section text-white py-24 px-6">
+                <div className="container mx-auto relative z-10 flex flex-col md:flex-row justify-between items-center gap-12">
+                    <div className="max-w-xl">
+                        <p className="unib-font-body text-sm font-semibold tracking-widest uppercase mb-4"
+                            style={{color:'var(--accent)'}}>
+                            Escuela Politécnica Nacional
                         </p>
-                        <ul className='space-y-4'>
-                            <li>
-                                <MdDashboard className='inline text-2xl mr-2' />Administrative Dashboard
-                            </li>
-                            <li>
-                                <FaRobot className='inline text-2xl mr-2' />
-                                Artificial intelligence
-                            </li>
-                            <li>
-                                <BsCashCoin className='inline text-2xl mr-2' />
-                                Payment gateway
-                            </li>
-                            <li>
-                                <FaCommentSms className='inline text-2xl mr-2' />
-                                Realtime chat
-                            </li>
-                            <li>
-                                <TbDog className='inline text-2xl mr-2' />
-                                Management Patients
-                            </li>
-                            <li>
-                                <FaUserDoctor className='inline text-2xl mr-2' />
-                                Management Veterinarians
-                            </li>
-                            <li>
-                                <GiMedicines className='inline text-2xl mr-2' />
-                                Management Treatments
-                            </li>
-                        </ul>
-                        <p className='my-4'>And other features that leverage the modern technologies</p>
+                        <h2 className="unib-font-display text-4xl md:text-6xl font-black leading-tight mb-6">
+                            Compra y vende libros académicos de forma fácil
+                        </h2>
+                        <p className="unib-font-body text-lg text-blue-100 mb-10 leading-relaxed">
+                            Encuentra libros a mejor precio o publica los que ya no usas en pocos pasos.
+                        </p>
+                        <Link to="/login" className="btn-accent inline-block px-8 py-3 rounded-xl text-base">
+                            Explorar libros
+                        </Link>
                     </div>
 
-                </div>
-
-            </section>
-
-
-            <section className='container mx-auto px-4'>
-
-                <div className='container mx-auto relative mt-6'>
-                    <h2 className='font-semibold text-3xl relative z-1 w-50 text-center mx-auto bg-white'>SERVICES</h2>
-                    <div className='text-amber-900 border-2 absolute top-1/2 w-full z-0' />
-                </div>
-
-                <div className='my-10 flex justify-between flex-wrap gap-5'>
-
-                    <div className="text-center shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.3)] hover:shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.5)] transition-shadow duration-300 relative pt-4 sm:flex-1">
-                        <FaUserDoctor className='inline text-5xl' />
-                        <h4 className="text-xl font-bold py-4 text-amber-700 hover:underline">Management Veterinarians</h4>
-                        <p className="my-4 px-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-                            similique sint eius consectetur rerum voluptate rem tenetur quisquam veniam quos ad facilis alias
-                            necessitatibus.</p>
-                        <hr className="border-1 border-amber-900 absolute w-full" />
-                    </div>
-
-
-                    <div className="text-center shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.3)] hover:shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.5)] transition-shadow duration-300 relative pt-4 bg-red-50 sm:flex-1">
-                        <TbDog className='inline text-5xl' />
-                        <h4 className="text-xl font-bold py-4 text-amber-700 hover:underline">Management Patients</h4>
-                        <p className="my-4 px-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-                            similique sint eius consectetur rerum voluptate rem tenetur quisquam veniam quos ad facilis alias
-                            necessitatibus.</p>
-                        <hr className="border-1 border-amber-900 absolute w-full" />
-                    </div>
-
-                    <div className="text-center shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.3)] hover:shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.5)] transition-shadow duration-300 relative pt-4 bg-red-50 sm:flex-1">
-                        <GiMedicines className='inline text-5xl' />
-                        <h4 className="text-xl font-bold py-4 text-amber-700 hover:underline">Management Treatments</h4>
-                        <p className="my-4 px-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-                            similique sint eius consectetur rerum voluptate rem tenetur quisquam veniam quos ad facilis alias
-                            necessitatibus.</p>
-                        <hr className="border-1 border-amber-900 absolute w-full" />
-                    </div>
-
-                    <div className="text-center shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.3)] hover:shadow-[0.1rem_0.1rem_1rem_rgba(0,0,0,0.5)] transition-shadow duration-300 relative pt-4 sm:flex-1">
-                        <FaCommentSms className='inline text-5xl' />
-                        <h4 className="text-xl font-bold py-4 text-amber-700 hover:underline">Realtime Chat</h4>
-                        <p className="my-4 px-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae,
-                            similique sint eius consectetur rerum voluptate rem tenetur quisquam veniam quos ad facilis alias
-                            necessitatibus.</p>
-                        <hr className="border-1 border-amber-900 absolute w-full" />
+                    {/* Decorative book icon block */}
+                    <div className="hidden md:flex flex-col items-center gap-4 opacity-90">
+                        <div className="w-48 h-48 rounded-2xl flex items-center justify-center"
+                            style={{background:'rgba(255,255,255,0.08)', border:'1.5px solid rgba(255,255,255,0.15)'}}>
+                            <FaBookOpen style={{fontSize:'6rem', color:'var(--accent)'}} />
+                        </div>
+                        <p className="unib-font-body text-blue-200 text-sm text-center">
+                            La comunidad politécnica<br />comparte conocimiento
+                        </p>
                     </div>
                 </div>
             </section>
 
 
-            <footer className='text-center bg-red-50 p-6 sm:px-20 sm:py-10 mt-20 rounded-tr-3xl rounded-tl-3xl space-y-8'>
-
-                <div className='flex justify-between items-center'>
-                    <div className='text-3xl font-extrabold text-amber-800'>Contact US</div>
-                    <ul className='flex gap-4'>
-                        <li><FaFacebook className='text-2xl' /></li>
-                        <li><FaSquareInstagram className='text-2xl' /></li>
-                        <li><FaXTwitter className='text-2xl' /></li>
-                    </ul>
-                </div>
-
-                <div className='flex justify-between items-center'>
-                    <div className='text-left'>
-                        <p className='font-bold my-2'>Email: admin@vet.com</p>
-                        <p className='font-bold'>Phone: 0995644186</p>
+            {/* ABOUT */}
+            <section id="about" className="unib-font-body py-16 px-6" style={{background:'var(--light-bg)'}}>
+                <div className="container mx-auto">
+                    <div className="section-divider">
+                        <span>Sobre el sistema</span>
                     </div>
-                    <div className='flex-1 sm:max-w-1/2'>
-                        <form action="#" className='w-full p-4'>
-                            <fieldset className='border-2 border-amber-900 p-4 rounded-sm '>
-                                <legend className='bg-amber-950 w-full text-left text-white pl-2 py-2'>Subcribe our newsletter</legend>
-                                <div className='flex justify-between gap-4'>
-                                    <input type="email" placeholder="Enter your email" className='sm:flex-1 border border-gray-300 rounded-md focus:outline-none px-2' />
-                                    <button className='flex-1 sm:max-w-40 border bg-amber-950 p-1 rounded-lg text-white'>Send</button>
+
+                    <div className="flex flex-col md:flex-row gap-12 items-start mt-8">
+                        <div className="md:w-1/2">
+                            <p className="text-lg leading-relaxed mb-6" style={{color:'var(--text-dark)'}}>
+                                Este sistema web está orientado a facilitar la compra y venta de libros académicos
+                                de segunda mano mediante una plataforma digital simple, accesible y organizada.
+                            </p>
+                            <ul className="space-y-3">
+                                {[
+                                    'Publicación de libros académicos',
+                                    'Búsqueda por título, autor o categoría',
+                                    'Gestión de publicaciones',
+                                    'Registro y autenticación de usuarios',
+                                    'Contacto entre compradores y vendedores',
+                                    'Visualización detallada de cada libro',
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3">
+                                        <span className="w-2 h-2 rounded-full flex-shrink-0"
+                                            style={{background:'var(--accent)'}}></span>
+                                        <span style={{color:'var(--text-dark)'}}>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <p className="mt-6 text-sm italic" style={{color:'var(--text-muted)'}}>
+                                Diseñado para optimizar el acceso a recursos educativos y mejorar la interacción entre usuarios.
+                            </p>
+                        </div>
+
+                        <div className="md:w-1/2 flex justify-center">
+                            <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
+                                {[
+                                    {icon: <FaUserGraduate />, label:'Comunidad EPN'},
+                                    {icon: <FaBookOpen />, label:'Libros académicos'},
+                                    {icon: <FaExchangeAlt />, label:'Segunda mano'},
+                                    {icon: <MdSearch />, label:'Búsqueda fácil'},
+                                ].map((c, i) => (
+                                    <div key={i} className="feature-card text-center">
+                                        <div className="feature-icon mx-auto">{c.icon}</div>
+                                        <p className="text-sm font-semibold" style={{color:'var(--primary)'}}>{c.label}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            {/* FEATURES */}
+            <section id="features" className="unib-font-body py-16 px-6 bg-white">
+                <div className="container mx-auto">
+                    <div className="section-divider" style={{}}>
+                        <span style={{background:'white'}}>Funcionalidades</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                        {[
+                            {
+                                icon: <MdMenuBook />,
+                                title: 'Publicación rápida',
+                                desc: 'Publica tus libros de forma rápida y sencilla con toda la información necesaria.'
+                            },
+                            {
+                                icon: <MdSearch />,
+                                title: 'Búsqueda eficiente',
+                                desc: 'Sistema de búsqueda por título, autor o categoría para encontrar lo que necesitas.'
+                            },
+                            {
+                                icon: <MdManageAccounts />,
+                                title: 'Gestión de publicaciones',
+                                desc: 'Administra todas tus publicaciones activas desde tu perfil de usuario.'
+                            },
+                            {
+                                icon: <MdVisibility />,
+                                title: 'Información clara',
+                                desc: 'Visualización detallada de cada libro: precio, estado, contacto y más.'
+                            },
+                        ].map((f, i) => (
+                            <div key={i} className="feature-card">
+                                <div className="feature-icon">{f.icon}</div>
+                                <h4 className="font-semibold text-base mb-2" style={{color:'var(--primary)'}}>{f.title}</h4>
+                                <p className="text-sm leading-relaxed" style={{color:'var(--text-muted)'}}>{f.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+
+            {/* CONTACT / FOOTER */}
+            <footer id="contact" className="footer-area unib-font-body py-14 px-6 mt-0">
+                <div className="container mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-10">
+                        <div>
+                            <h3 className="unib-font-display text-3xl font-bold mb-2">
+                                Uni<span style={{color:'var(--accent)'}}>Books</span>
+                            </h3>
+                            <p className="text-blue-200 text-sm max-w-xs leading-relaxed mb-4">
+                                ¿Tienes dudas o sugerencias? Escríbenos.
+                            </p>
+                            <div className="flex gap-4 mt-2">
+                                <FaFacebook className="text-2xl text-blue-200 hover:text-white cursor-pointer transition-colors" />
+                                <FaSquareInstagram className="text-2xl text-blue-200 hover:text-white cursor-pointer transition-colors" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className="font-semibold mb-1">
+                                <MdEmail className="inline mr-2" style={{color:'var(--accent)'}} />
+                                unibooks@epn.edu.ec
+                            </p>
+                            <p className="text-blue-200 text-sm">Escuela Politécnica Nacional — Quito, Ecuador</p>
+                        </div>
+
+                        <div className="w-full md:max-w-sm">
+                            <fieldset className="p-4 rounded-lg" style={{border:'1.5px solid rgba(255,255,255,0.15)'}}>
+                                <legend className="px-3 py-1 rounded text-sm font-semibold"
+                                    style={{background:'var(--accent)', color:'var(--primary)'}}>
+                                    Contáctanos
+                                </legend>
+                                <div className="flex gap-3 mt-2">
+                                    <input
+                                        type="email"
+                                        placeholder="Tu correo electrónico"
+                                        className="flex-1 rounded-lg px-3 py-2 text-sm bg-white/10 border border-white/20
+                                            text-white placeholder-blue-200 focus:outline-none focus:border-yellow-400"
+                                    />
+                                    <button className="btn-accent px-4 py-2 rounded-lg text-sm flex-shrink-0">
+                                        Enviar
+                                    </button>
                                 </div>
                             </fieldset>
-                        </form>
+                        </div>
                     </div>
+
+                    <hr className="mt-10 border-white/10" />
+                    <p className="text-center text-blue-300 text-xs mt-6">
+                        © 2025 UniBooks — Escuela Politécnica Nacional
+                    </p>
                 </div>
-
-                <hr className='border-1 border-amber-800' />
-
-                <p className='font-semibold'>
-                    copyright - © - BYRONTOSH
-                </p>
             </footer>
-
         </>
     )
 }
-
