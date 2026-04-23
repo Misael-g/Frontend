@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { Home } from './pages/Home'
 import Login from './pages/Login'
@@ -16,9 +17,20 @@ import Reset from './pages/Reset'
 import Panel from './pages/Panel'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
+import storeAuth from './context/storeAuth'
+import storeProfile from './context/storeProfile'
 
 
 function App() {
+  const { token } = storeAuth()
+  const { profile } = storeProfile()
+ 
+  // Cada vez que haya token activo, carga los datos del perfil desde el backend
+  useEffect(() => {
+    if (token) {
+      profile()
+    }
+  }, [token])
   return (
     <>
       <BrowserRouter>
