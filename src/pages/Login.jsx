@@ -1,11 +1,41 @@
 import { useState } from "react"
 import { MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { FaBookOpen } from "react-icons/fa"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { useForm } from 'react-hook-form'
+import { ToastContainer } from 'react-toastify'
+import { useFetch } from '../hooks/useFetch'
+import storeAuth from "../context/storeAuth"
 
 
 const Login = () => {
-    const [showPassword, setShowPassword] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false)
+
+    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors } } = useForm()
+    const fetchDataBackend = useFetch()
+
+    // Acciones del store global de Zustand
+    const { setToken, setRol, setUsuario } = storeAuth()
+
+    const loginUser = async (dataForm) => {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/login`
+        const response = await fetchDataBackend(url, dataForm, 'POST')
+        if (response) {
+            // Guardar token, rol y datos del usuario en el store
+            setToken(response.token)
+            setRol(response.rol)
+            setUsuario({
+                _id:      response._id,
+                nombre:   response.nombre,
+                email:    response.email,
+                telefono: response.telefono,
+                carrera:  response.carrera,
+            })
+            navigate('/dashboard')
+        }
+    }
 
     return (
         <>
@@ -79,6 +109,8 @@ const Login = () => {
                 }
             `}</style>
 
+            <ToastContainer />
+
             <div className="flex flex-col sm:flex-row h-screen">
 
                 {/* Panel lateral */}
@@ -123,7 +155,7 @@ const Login = () => {
                             Por favor ingresa tus datos para continuar
                         </p>
 
-                        <form>
+                        <form onSubmit={handleSubmit(loginUser)}>
 
                             {/* Correo */}
                             <div className="mb-4">
@@ -133,13 +165,17 @@ const Login = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    placeholder="Ingresa tu correo"
+                                    placeholder="Ingresa tu correo electrónico"
                                     className="input-field"
+                                    {...register("email", { required: "El correo electrónico es obligatorio" })}
                                 />
+                                {errors.email && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
+                                )}
                             </div>
 
                             {/* Contraseña */}
-                            <div className="mb-5">
+                            <div className="mb-2">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
                                     Contraseña
@@ -149,6 +185,7 @@ const Login = () => {
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••••••"
                                         className="input-field pr-10"
+                                        {...register("password", { required: "La contraseña es obligatoria" })}
                                     />
                                     <button
                                         type="button"
@@ -160,52 +197,47 @@ const Login = () => {
                                         {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                                     </button>
                                 </div>
+                                {errors.password && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>
+                                )}
                             </div>
 
-                            <Link to="/dashboard" className="btn-primary">
+                            {/* Enlace olvidaste contraseña */}
+                            <div className="mb-6 text-right">
+                                <Link to="/forgot/id"
+                                    className="unib-body text-xs"
+                                    style={{color:'var(--text-muted)'}}>
+                                    ¿Olvidaste tu contraseña?
+                                </Link>
+                            </div>
+
+                            <button type="submit" className="btn-primary">
                                 Iniciar sesión
-                            </Link>
+                            </button>
 
                         </form>
 
-
-                        {/* Separador */}
-                        <div className="unib-body flex items-center gap-3 my-5">
-                            <hr className="flex-1" style={{borderColor:'var(--border)'}} />
-                            <span className="text-xs" style={{color:'var(--text-muted)'}}>O</span>
-                            <hr className="flex-1" style={{borderColor:'var(--border)'}} />
-                        </div>
-
-                        {/* Google */}
-                        <button className="unib-body w-full flex items-center justify-center gap-3 py-2.5 rounded-lg text-sm font-medium border transition-all hover:bg-gray-50"
-                            style={{borderColor:'var(--border)', color:'var(--primary)'}}>
-                            <img className="w-5" src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google" />
-                            Continuar con Google
-                        </button>
-
-                        {/* Links */}
-                        <div className="mt-5">
-                            <Link to="/forgot/id" className="unib-body text-xs underline"
-                                style={{color:'var(--text-muted)'}}>
-                                ¿Olvidaste tu contraseña?
+                        {/* Links inferiores */}
+                        <div className="unib-body mt-6 pt-5 border-t flex justify-between items-center text-sm"
+                            style={{borderColor:'var(--border)'}}>
+                            <Link to="/" style={{color:'var(--text-muted)'}}>
+                                ← Regresar
                             </Link>
-                        </div>
-
-                        <div className="unib-body mt-4 flex justify-between items-center text-sm">
-                            <Link to="/" className="underline" style={{color:'var(--text-muted)'}}>Regresar</Link>
+                            
                             <Link to="/register"
-                                className="px-5 py-2 rounded-lg font-semibold text-white text-sm"
-                                style={{background:'var(--primary)'}}>
+                                className="py-2 px-5 rounded-lg font-semibold text-sm border"
+                                style={{color:'var(--primary)', borderColor:'var(--primary)'}}>
                                 Registrarse
                             </Link>
                         </div>
 
                     </div>
-                    
+
                 </div>
+
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login
