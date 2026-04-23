@@ -12,7 +12,7 @@ const Dashboard = () => {
     return (
         <div className='md:flex md:min-h-screen'>
 
-            {/* ── Menú lateral ─────────────────────────────────────────── */}
+            {/* ─Menú lateral */}
             <div className='md:w-1/5 bg-gray-800 px-5 py-4'>
 
                 <h2 className='text-4xl font-black text-center text-slate-200'>UniBooks</h2>
@@ -89,7 +89,7 @@ const Dashboard = () => {
             </div>
 
 
-            {/* ── Contenido principal ───────────────────────────────────── */}
+            {/*  Contenido principal  */}
             <div className='flex-1 flex flex-col justify-between h-screen bg-gray-100'>
 
                 {/* Barra superior */}
