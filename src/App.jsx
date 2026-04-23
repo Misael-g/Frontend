@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { Home } from './pages/Home'
 import Login from './pages/Login'
@@ -15,38 +14,46 @@ import Update from './pages/Update'
 import Chat from './pages/Chat'
 import Reset from './pages/Reset'
 import Panel from './pages/Panel'
-
+import PublicRoute from './routes/PublicRoute'
+import ProtectedRoute from './routes/ProtectedRoute'
 
 
 function App() {
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        
-        <Route index element={<Home/>}/>
-        <Route path='login' element={<Login/>}/>
-        <Route path='register' element={<Register/>}/>
-        <Route path='forgot/:id' element={<Forgot/>}/>
-        <Route path='confirmar/:token' element={<Confirm/>}/>
-        <Route path='reset/:token' element={<Reset/>}/>
-        <Route path='*' element={<NotFound />} />
+      <BrowserRouter>
+        <Routes>
 
+          {/*  Rutas públicas */}
+          <Route element={<PublicRoute />}>
+            <Route index element={<Home />} />
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+            <Route path='forgot/:id' element={<Forgot />} />
+            <Route path='confirmar/:token' element={<Confirm/>}/>
+            <Route path='recuperarpassword/:token' element={<Reset/>}/>
+            <Route path='*' element={<NotFound />} />
+          </Route>
 
-        <Route path='/dashboard' element={<Dashboard/>}>
-          <Route index element={<Panel/>}/>
-          <Route path='profile' element={<Profile/>}/>
-          <Route path='list' element={<List/>}/>
-          <Route path='details/:id' element={<Details/>}/>
-          <Route path='create' element={<Create/>}/>
-          <Route path='update/:id' element={<Update/>}/>
-          <Route path='chat' element={<Chat/>}/>
+          {/*  Rutas protegidas  */}
+          <Route path='dashboard/*' element={
+            <ProtectedRoute>
+              <Routes>
+                <Route element={<Dashboard />}>
+                  <Route index element={<Panel />} />
+                  <Route path='profile' element={<Profile />} />
+                  <Route path='list' element={<List />} />
+                  <Route path='details/:id' element={<Details />} />
+                  <Route path='create' element={<Create />} />
+                  <Route path='update/:id' element={<Update />} />
+                  <Route path='chat' element={<Chat />} />
+                </Route>
+              </Routes>
+            </ProtectedRoute>
+          } />
 
-        </Route>
-
-
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
