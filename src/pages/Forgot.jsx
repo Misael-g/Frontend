@@ -1,9 +1,21 @@
 import { FaBookOpen } from "react-icons/fa"
 import { Link } from 'react-router'
+import { useForm } from 'react-hook-form'
+import { ToastContainer } from 'react-toastify'
+import { useFetch } from '../hooks/useFetch'
 
 
 export const Forgot = () => {
 
+    const { register, handleSubmit, reset, formState: { errors } } = useForm()
+    const fetchDataBackend = useFetch()
+
+    // Enviar correo de recuperación al backend
+    const sendMail = async (dataForm) => {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/recuperarpassword`
+        const response = await fetchDataBackend(url, dataForm, 'POST')
+        if (response) reset()
+    }
 
     return (
         <>
@@ -74,6 +86,8 @@ export const Forgot = () => {
                 }
             `}</style>
 
+            <ToastContainer />
+
             <div className="flex flex-col sm:flex-row h-screen">
 
                 {/* Panel lateral */}
@@ -98,7 +112,7 @@ export const Forgot = () => {
                             No te preocupes, ingresa tu correo y te enviaremos instrucciones para recuperarla.
                         </p>
 
-                        <form>
+                        <form onSubmit={handleSubmit(sendMail)}>
 
                             {/* Correo */}
                             <div className="mb-5">
@@ -110,10 +124,14 @@ export const Forgot = () => {
                                     type="email"
                                     placeholder="Ingresa un correo electrónico válido"
                                     className="input-field"
+                                    {...register("email", { required: "El correo electrónico es obligatorio" })}
                                 />
+                                {errors.email && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
+                                )}
                             </div>
 
-                            <button type="button" className="btn-primary">
+                            <button type="submit" className="btn-primary">
                                 Enviar correo
                             </button>
 
@@ -128,9 +146,8 @@ export const Forgot = () => {
                                 Iniciar sesión
                             </Link>
                         </div>
-                        
-                    </div>
 
+                    </div>
                 </div>
 
             </div>
