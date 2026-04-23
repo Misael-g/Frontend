@@ -6,22 +6,27 @@ import { useForm } from "react-hook-form"
 import { ToastContainer } from "react-toastify"
 import { useFetch } from "../hooks/useFetch"
 
+
 export const Register = () => {
 
     const [showPassword, setShowPassword] = useState(false)
-    const fetchDataBackend = useFetch()
-    const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
+    // Hook de useFetch para llamar al backend
+    const fetchDataBackend = useFetch()
+
+    // React Hook Form
+    const { register, handleSubmit, reset, formState: { errors } } = useForm()
+
+    // Función que se ejecuta al enviar el formulario
     const registerUser = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/registro`
         const response = await fetchDataBackend(url, dataForm, "POST")
+        // Si el backend respondió OK, limpiar el formulario
         if (response) reset()
     }
 
     return (
         <>
-            <ToastContainer />
-
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
                 :root {
@@ -48,9 +53,6 @@ export const Register = () => {
                 .input-field:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
-                }
-                .input-error {
-                    border-color: #dc2626 !important;
                 }
                 .btn-primary {
                     background: var(--primary);
@@ -84,6 +86,8 @@ export const Register = () => {
                 }
             `}</style>
 
+            <ToastContainer />
+
             <div className="flex flex-col sm:flex-row min-h-screen">
 
                 {/* Formulario */}
@@ -108,12 +112,10 @@ export const Register = () => {
                                 <input
                                     type="text"
                                     placeholder="Ingresa tu nombre"
-                                    className={`input-field ${errors.nombre ? 'input-error' : ''}`}
+                                    className="input-field"
                                     {...register("nombre", { required: "El nombre es obligatorio" })}
                                 />
-                                {errors.nombre && (
-                                    <p className="text-red-600 text-xs mt-1">{errors.nombre.message}</p>
-                                )}
+                                {errors.nombre && <p className="text-red-600 text-xs mt-1">{errors.nombre.message}</p>}
                             </div>
 
                             {/* Teléfono */}
@@ -126,12 +128,10 @@ export const Register = () => {
                                     type="text"
                                     inputMode="tel"
                                     placeholder="Ingresa tu teléfono"
-                                    className={`input-field ${errors.telefono ? 'input-error' : ''}`}
+                                    className="input-field"
                                     {...register("telefono", { required: "El teléfono es obligatorio" })}
                                 />
-                                {errors.telefono && (
-                                    <p className="text-red-600 text-xs mt-1">{errors.telefono.message}</p>
-                                )}
+                                {errors.telefono && <p className="text-red-600 text-xs mt-1">{errors.telefono.message}</p>}
                             </div>
 
                             {/* Carrera (opcional) */}
@@ -157,12 +157,10 @@ export const Register = () => {
                                 <input
                                     type="email"
                                     placeholder="Ingresa tu correo electrónico"
-                                    className={`input-field ${errors.email ? 'input-error' : ''}`}
+                                    className="input-field"
                                     {...register("email", { required: "El correo electrónico es obligatorio" })}
                                 />
-                                {errors.email && (
-                                    <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
-                                )}
+                                {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>}
                             </div>
 
                             {/* Contraseña */}
@@ -175,7 +173,7 @@ export const Register = () => {
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••••••"
-                                        className={`input-field pr-10 ${errors.password ? 'input-error' : ''}`}
+                                        className="input-field pr-10"
                                         {...register("password", { required: "La contraseña es obligatoria" })}
                                     />
                                     <button
@@ -188,9 +186,7 @@ export const Register = () => {
                                         {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                                     </button>
                                 </div>
-                                {errors.password && (
-                                    <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>
-                                )}
+                                {errors.password && <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>}
                             </div>
 
                             <button type="submit" className="btn-primary">
@@ -211,7 +207,7 @@ export const Register = () => {
                     </div>
                 </div>
 
-                {/* Panel lateral decorativo */}
+                {/* Panel lateral */}
                 <div className="panel-bg hidden sm:flex sm:w-1/2 flex-col items-center justify-center text-white p-12 relative z-10">
                     <FaBookOpen style={{fontSize:'5rem', color:'var(--accent)', marginBottom:'24px'}} />
                     <h1 className="unib-display text-4xl font-black mb-4 text-center">
