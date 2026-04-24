@@ -1,13 +1,14 @@
 import { Link, Outlet, useLocation } from 'react-router'
 import storeAuth from '../context/storeAuth'
+import storeProfile from '../context/storeProfile'
 
 
 const Dashboard = () => {
     const location = useLocation()
     const urlActual = location.pathname
 
-    // Datos del store global
-    const { clearToken, usuario, rol } = storeAuth()
+    const { clearToken } = storeAuth()
+    const { user } = storeProfile()   // datos frescos del backend
 
     return (
         <div className='md:flex md:min-h-screen'>
@@ -24,15 +25,15 @@ const Dashboard = () => {
                     width={120} height={120}
                 />
 
-                {/* Nombre del usuario logueado */}
+                {/* Nombre del usuario */}
                 <p className='text-slate-400 text-center my-2 text-sm'>
                     <span className='bg-green-600 w-3 h-3 inline-block rounded-full mr-1'></span>
-                    {usuario?.nombre ?? 'Usuario'}
+                    Bienvenido - {user?.nombre}
                 </p>
 
                 {/* Rol */}
                 <p className='text-slate-400 text-center text-xs mb-2 capitalize'>
-                    {rol ?? ''}
+                    {user?.rol}
                 </p>
 
                 <hr className="mt-3 border-slate-500" />
@@ -95,9 +96,8 @@ const Dashboard = () => {
                 {/* Barra superior */}
                 <div className='bg-gray-800 py-2 flex md:justify-end items-center gap-5 justify-center'>
 
-                    {/* Nombre visible en la barra */}
                     <div className='text-md font-semibold text-slate-100'>
-                        {usuario?.nombre ?? 'Usuario'}
+                        Usuario - {user?.nombre}
                     </div>
 
                     <div>
