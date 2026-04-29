@@ -1,131 +1,173 @@
+import { useEffect } from "react"
+import { Link } from "react-router"
+import { FaBook, FaCheckCircle, FaTimesCircle, FaPlus } from "react-icons/fa"
+import { MdBarChart } from "react-icons/md"
+import storePublicaciones from "../context/storePublicaciones"
+import storeProfile from "../context/storeProfile"
+
+
 export default function Panel() {
+    const { misPublicaciones, cargarMisPublicaciones } = storePublicaciones()
+    const { user } = storeProfile()
 
-  const inputCls = "w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 placeholder-gray-400";
+    useEffect(() => {
+        cargarMisPublicaciones()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-  return (
+    // metricas calculadas desde mis publicaciones
+    const total       = misPublicaciones.length
+    const disponibles = misPublicaciones.filter(p => p.estado === "disponible").length
+    const vendidos    = misPublicaciones.filter(p => p.estado === "vendido").length
+    const recientes   = [...misPublicaciones]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5)
 
+    const formatFecha = (iso) =>
+        new Date(iso).toLocaleDateString("es-EC", { day: "2-digit", month: "short", year: "numeric" })
 
-    <div className="min-h-screen bg-gray-100">
+    return (
+        <div className="min-h-screen bg-gray-100">
 
-
-      <h1 className='font-black text-2xl text-gray-500'>Métricas generales</h1>
-      <hr className='my-4 border-t-2 border-gray-300' />
-
-
-
-      {/* Resultados generales */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-
-        <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-sm text-gray-500">Clientes</p>
-          <p className="text-3xl font-semibold text-gray-800">120</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-sm text-gray-500">Mascotas</p>
-          <p className="text-3xl font-semibold text-gray-800">185</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-sm text-gray-500">Citas hoy</p>
-          <p className="text-3xl font-semibold text-gray-800">5</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-sm text-gray-500">Tratamientos</p>
-          <p className="text-3xl font-semibold text-gray-800">5</p>
-        </div>
-
-      </section>
-
-
-
-      <h1 className='font-black text-2xl text-gray-500'>Automatizaciones con IA</h1>
-      <hr className='my-4 border-t-2 border-gray-300' />
-
-
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <div className="bg-white rounded-lg shadow p-4">
-
-          <h2 className="text-xl font-semibold text-gray-700 mb-3">Agendar cita</h2>
-          <hr className="mb-4" />
-
-          {/* Formulario */}
-          <form className="space-y-3">
-
-            <div>
-              <label htmlFor="cliente" className="text-sm text-gray-600">Cliente</label>
-              <input id="cliente" className={inputCls} placeholder="Ingresa el nombre del cliente" />
+            {/* bienvenida */}
+            <div className="mb-6">
+                <h1 className="font-black text-2xl text-gray-600">
+                    Bienvenido, {user?.nombre ?? "usuario"} 👋
+                </h1>
+                <p className="text-gray-400 text-sm mt-1">Aquí tienes un resumen de tus publicaciones</p>
+                <hr className="my-4 border-t-2 border-gray-300" />
             </div>
 
-            <div>
-              <label htmlFor="mascota" className="text-sm text-gray-600">Mascota</label>
-              <input id="mascota" className={inputCls} placeholder="Nombre de la mascota" />
+            {/* rarjetas de métricas */}
+            <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                    <div className="bg-gray-100 p-3 rounded-full">
+                        <FaBook className="text-gray-600 text-2xl" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Total publicaciones</p>
+                        <p className="text-3xl font-bold text-gray-800">{total}</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                    <div className="bg-green-100 p-3 rounded-full">
+                        <FaCheckCircle className="text-green-600 text-2xl" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Disponibles</p>
+                        <p className="text-3xl font-bold text-green-700">{disponibles}</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+                    <div className="bg-red-100 p-3 rounded-full">
+                        <FaTimesCircle className="text-red-600 text-2xl" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Vendidos</p>
+                        <p className="text-3xl font-bold text-red-600">{vendidos}</p>
+                    </div>
+                </div>
+
+            </section>
+
+            {/* ultimas publicaciones */}
+            <div className="bg-white rounded-xl shadow p-6 mb-8">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-bold text-gray-700 flex items-center gap-2">
+                        <MdBarChart className="text-xl" /> Mis últimas publicaciones
+                    </h2>
+                    <Link
+                        to="/dashboard/mis-publicaciones"
+                        className="text-xs text-gray-500 hover:text-gray-900 underline"
+                    >
+                        Ver todas →
+                    </Link>
+                </div>
+
+                {recientes.length === 0 ? (
+                    <div className="text-center py-8">
+                        <FaBook className="text-gray-200 text-5xl mx-auto mb-3" />
+                        <p className="text-gray-400 text-sm mb-4">Aún no tienes publicaciones</p>
+                        <Link
+                            to="/dashboard/create"
+                            className="inline-flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                        >
+                            <FaPlus /> Crear primera publicación
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full table-auto text-sm">
+                            <thead>
+                                <tr className="text-left text-gray-400 border-b border-gray-100">
+                                    <th className="pb-2 pr-4">Título</th>
+                                    <th className="pb-2 pr-4">Precio</th>
+                                    <th className="pb-2 pr-4">Estado</th>
+                                    <th className="pb-2">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {recientes.map((pub) => (
+                                    <tr key={pub._id} className="border-b border-gray-50 hover:bg-gray-50">
+                                        <td className="py-2 pr-4">
+                                            <Link
+                                                to={`/dashboard/details/${pub._id}`}
+                                                className="font-semibold text-gray-700 hover:underline truncate block max-w-xs"
+                                            >
+                                                {pub.titulo}
+                                            </Link>
+                                        </td>
+                                        <td className="py-2 pr-4 text-green-700 font-bold whitespace-nowrap">
+                                            ${Number(pub.precio).toFixed(2)}
+                                        </td>
+                                        <td className="py-2 pr-4">
+                                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                                pub.estado === "disponible"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-red-100 text-red-700"
+                                            }`}>
+                                                {pub.estado}
+                                            </span>
+                                        </td>
+                                        <td className="py-2 text-gray-400 whitespace-nowrap">
+                                            {formatFecha(pub.createdAt)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="fecha" className="text-sm text-gray-600">Fecha</label>
-                <input id="fecha" type="date" className={inputCls} />
-              </div>
-              <div>
-                <label htmlFor="hora" className="text-sm text-gray-600">Hora</label>
-                <input id="hora" type="time" className={inputCls} />
-              </div>
+            {/* accinones rapidas */}
+            <div className="bg-white rounded-xl shadow p-6">
+                <h2 className="font-bold text-gray-700 mb-4">Acciones rápidas</h2>
+                <div className="flex flex-wrap gap-3">
+                    <Link
+                        to="/dashboard/create"
+                        className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                    >
+                        <FaPlus /> Nueva publicación
+                    </Link>
+                    <Link
+                        to="/dashboard/mis-publicaciones"
+                        className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                    >
+                        <FaBook /> Gestionar mis libros
+                    </Link>
+                    <Link
+                        to="/dashboard/list"
+                        className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                    >
+                        Ver todos los libros
+                    </Link>
+                </div>
             </div>
-
-            <div>
-              <label htmlFor="motivo" className="text-sm text-gray-600">Motivo (opcional)</label>
-              <input id="motivo" className={inputCls} placeholder="Vacuna, control, etc." />
-            </div>
-
-            <button type="button" className="w-full bg-gray-800 text-white rounded-md py-2 hover:bg-gray-700">
-              Guardar cita
-            </button>
-
-          </form>
 
         </div>
-
-
-
-        {/* Listar citas */}
-        <div className="bg-white rounded-lg shadow p-4">
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-            <h2 className="text-xl font-semibold text-gray-700">
-              Citas para el día de hoy:{" "}
-              <span className="font-normal">
-                {new Date().toLocaleDateString("es-EC")}
-              </span>
-            </h2>
-
-            <button type="button" className="bg-gray-800 text-white rounded-md py-2 
-              px-4 hover:bg-gray-700 w-full sm:w-auto">Consultar
-            </button>
-          </div>
-
-          <hr className="mb-4" />
-
-          <ul className="divide-y">
-            <li className="py-3 flex justify-between">
-              <div>
-                <p className="font-medium text-gray-800">Hora: 09:30</p>
-                <p className="text-sm text-gray-600">Propietario: Luna</p>
-                <p className="text-sm text-gray-600">Mascota: Luna</p>
-                <p className="text-sm text-gray-600">Motivo: Vacuna</p>
-              </div>
-              <span className="text-xs bg-gray-300 font-bold px-2 py-1 rounded self-center">
-                2025-08-28
-              </span>
-            </li>
-          </ul>
-
-        </div>
-        
-      </section>
-
-    </div>
-  )
+    )
 }

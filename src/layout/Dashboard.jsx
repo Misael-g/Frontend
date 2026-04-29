@@ -8,12 +8,18 @@ const Dashboard = () => {
     const urlActual = location.pathname
 
     const { clearToken } = storeAuth()
-    const { user } = storeProfile()   // datos frescos del backend
+    const { user } = storeProfile()
+
+    // clases activas e inactivas del menu
+    const linkClass = (path) =>
+        `${urlActual === path
+            ? 'text-slate-200 bg-gray-900 px-3 py-2 rounded-md'
+            : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`
 
     return (
         <div className='md:flex md:min-h-screen'>
 
-            {/* ─Menú lateral */}
+            {/*  menu lateral */}
             <div className='md:w-1/5 bg-gray-800 px-5 py-4'>
 
                 <h2 className='text-4xl font-black text-center text-slate-200'>UniBooks</h2>
@@ -25,63 +31,55 @@ const Dashboard = () => {
                     width={120} height={120}
                 />
 
-                {/* Nombre del usuario */}
+                {/* nombre del usuario */}
                 <p className='text-slate-400 text-center my-2 text-sm'>
                     <span className='bg-green-600 w-3 h-3 inline-block rounded-full mr-1'></span>
                     Bienvenido - {user?.nombre}
                 </p>
 
-                {/* Rol */}
+                {/* rol */}
                 <p className='text-slate-400 text-center text-xs mb-2 capitalize'>
                     {user?.rol}
                 </p>
 
                 <hr className="mt-3 border-slate-500" />
 
-                {/* Links de navegación */}
+                {/* links de navegacin */}
                 <ul className="mt-5">
 
                     <li className="text-center">
-                        <Link to='/dashboard'
-                            className={`${urlActual === '/dashboard'
-                                ? 'text-slate-200 bg-gray-900 px-3 py-2 rounded-md'
-                                : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`}>
+                        <Link to='/dashboard' className={linkClass('/dashboard')}>
                             Dashboard
                         </Link>
                     </li>
 
                     <li className="text-center">
-                        <Link to='/dashboard/profile'
-                            className={`${urlActual === '/dashboard/profile'
-                                ? 'text-slate-200 bg-gray-900 px-3 py-2 rounded-md'
-                                : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`}>
+                        <Link to='/dashboard/profile' className={linkClass('/dashboard/profile')}>
                             Perfil
                         </Link>
                     </li>
 
                     <li className="text-center">
-                        <Link to='/dashboard/list'
-                            className={`${urlActual === '/dashboard/list'
-                                ? 'text-slate-200 bg-gray-900 px-3 py-2 rounded-md'
-                                : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`}>
-                            Listar
+                        <Link to='/dashboard/list' className={linkClass('/dashboard/list')}>
+                            Libros
+                        </Link>
+                    </li>
+
+                    {/*   mis publicaciones  */}
+                    <li className="text-center">
+                        <Link to='/dashboard/mis-publicaciones' className={linkClass('/dashboard/mis-publicaciones')}>
+                            Mis libros
                         </Link>
                     </li>
 
                     <li className="text-center">
-                        <Link to='/dashboard/create'
-                            className={`${urlActual === '/dashboard/create'
-                                ? 'text-slate-100 bg-gray-900 px-3 py-2 rounded-md'
-                                : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`}>
-                            Crear
+                        <Link to='/dashboard/create' className={linkClass('/dashboard/create')}>
+                            Publicar
                         </Link>
                     </li>
 
                     <li className="text-center">
-                        <Link to='/dashboard/chat'
-                            className={`${urlActual === '/dashboard/chat'
-                                ? 'text-slate-100 bg-gray-900 px-3 py-2 rounded-md'
-                                : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`}>
+                        <Link to='/dashboard/chat' className={linkClass('/dashboard/chat')}>
                             Chat
                         </Link>
                     </li>
@@ -90,7 +88,7 @@ const Dashboard = () => {
             </div>
 
 
-            {/*  Contenido principal  */}
+            {/*  contenido principal  */}
             <div className='flex-1 flex flex-col justify-between h-screen bg-gray-100'>
 
                 {/* Barra superior */}
@@ -109,7 +107,7 @@ const Dashboard = () => {
                         />
                     </div>
 
-                    {/* Botón salir — limpia el store y redirige al home */}
+                    {/* Boton salir */}
                     <div>
                         <Link
                             to='/'
@@ -123,8 +121,8 @@ const Dashboard = () => {
                 </div>
 
 
-                {/* Páginas internas */}
-                <div className='overflow-y-scroll p-8'>
+                {/* pginas internas */}
+                <div className='overflow-y-scroll p-8 flex-1'>
                     <Outlet />
                 </div>
 
