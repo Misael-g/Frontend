@@ -2,7 +2,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 // Store global con persistencia en localStorage
-// Guarda el token y los datos básicos del usuario al iniciar sesión
+// Guarda el token y los datos basicos del usuario al iniciar sesin
 const storeAuth = create(
     persist(
         (set) => ({

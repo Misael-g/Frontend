@@ -2,7 +2,7 @@ import { create } from "zustand"
 import axios from "axios"
 import { toast } from "react-toastify"
 
-// Lee el token del localStorage donde Zustand lo persistió
+// Lee el token del localStorage donde Zustand lo persiste
 const getAuthHeaders = () => {
     const stored = JSON.parse(localStorage.getItem("auth-unibooks"))
     return {
@@ -17,10 +17,10 @@ const storeProfile = create((set) => ({
 
     user: null,
 
-    // Limpiar usuario al cerrar sesión
+    // Limpiar usuario al cerrar sesiin
     clearUser: () => set({ user: null }),
 
-    // GET /api/perfil — cargar datos del usuario autenticado
+    //  /api/perfil — cargar datos del usuario autenticado
     profile: async () => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/perfil`
@@ -31,7 +31,7 @@ const storeProfile = create((set) => ({
         }
     },
 
-    // PUT /api/actualizarperfil/:id — actualizar nombre, email, teléfono, carrera
+    //  /api/actualizarperfil/:id — actualizar nombre, email, teléfono, carrera
     updateProfile: async (url, data) => {
         try {
             const respuesta = await axios.put(url, data, getAuthHeaders())
@@ -43,7 +43,7 @@ const storeProfile = create((set) => ({
         }
     },
 
-    // PUT /api/actualizarpassword — cambiar contraseña (cierra sesión al completar)
+    //  /api/actualizarpassword — cambiar contraseña 
     updatePasswordProfile: async (url, data) => {
         try {
             const respuesta = await axios.put(url, data, getAuthHeaders())
