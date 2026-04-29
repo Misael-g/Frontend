@@ -15,6 +15,7 @@ import Update from './pages/Update'
 import Chat from './pages/Chat'
 import Reset from './pages/Reset'
 import Panel from './pages/Panel'
+import MisPublicaciones from './pages/MisPublicaciones'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
 import storeAuth from './context/storeAuth'
@@ -36,7 +37,7 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          {/*  Rutas públicas */}
+          {/*  rutas publicas */}
           <Route element={<PublicRoute />}>
             <Route index element={<Home />} />
             <Route path='login' element={<Login />} />
@@ -47,7 +48,7 @@ function App() {
             <Route path='*' element={<NotFound />} />
           </Route>
 
-          {/*  Rutas protegidas  */}
+          {/*  rutas protegidas  */}
           <Route path='dashboard/*' element={
             <ProtectedRoute>
               <Routes>
@@ -58,6 +59,7 @@ function App() {
                   <Route path='details/:id' element={<Details />} />
                   <Route path='create' element={<Create />} />
                   <Route path='update/:id' element={<Update />} />
+                  <Route path='mis-publicaciones' element={<MisPublicaciones />} />  
                   <Route path='chat' element={<Chat />} />
                 </Route>
               </Routes>
