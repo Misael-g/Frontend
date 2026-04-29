@@ -1,220 +1,150 @@
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router"
+import { ToastContainer } from "react-toastify"
+import { MdCloudUpload, MdBook } from "react-icons/md"
+import storePublicaciones from "../../context/storePublicaciones"
 
 
 export const Form = () => {
+    const [preview, setPreview] = useState(null)
+    const [archivo, setArchivo] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const [stateAvatar, setStateAvatar] = useState({
-        generatedImage: "https://cdn-icons-png.flaticon.com/512/2138/2138440.png",
-        prompt: "",
-        loading: false
-    })
+    const navigate = useNavigate()
+    const { crearPublicacion } = storePublicaciones()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
-    const [selectedOption , setSelectedOption ] = useState("ia")
+    //   imagen seleccionada
+    const handleImageChange = (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            setArchivo(file)
+            setPreview(URL.createObjectURL(file))
+        }
+    }
 
+    const onSubmit = async (dataForm) => {
+        setLoading(true)
 
+        //  para poder enviar la imagen
+        const formData = new FormData()
+        formData.append("titulo", dataForm.titulo)
+        formData.append("descripcion", dataForm.descripcion)
+        formData.append("precio", dataForm.precio)
+        if (archivo) {
+            formData.append("imagen", archivo)
+        }
+
+        const ok = await crearPublicacion(formData)
+        setLoading(false)
+
+        if (ok) {
+            reset()
+            setPreview(null)
+            setArchivo(null)
+            navigate("/dashboard/list")
+        }
+    }
 
     return (
+        <>
+            <ToastContainer />
 
-        <form>
-            
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-2xl">
 
-            {/* Información del propietario */}
-            <fieldset className="border-2 border-gray-500 p-6 rounded-lg shadow-lg">
-
-                <legend className="text-xl font-bold text-gray-700 bg-gray-200 px-4 py-1 rounded-md">
-                    Información del propietario
-                </legend>
-
-                {/* Cédula */}
+                {/* titulo */}
                 <div>
-                    <label className="mb-2 block text-sm font-semibold">Cédula</label>
-                    <div className="flex items-center gap-10 mb-5">
-                        <input
-                            type="number"
-                            inputMode="numeric"
-                            placeholder="Ingresa la cédula"
-                            className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500"
-                        />
-                        <button className="py-1 px-8 bg-gray-600 text-slate-300 border rounded-xl hover:scale-110 
-                        duration-300 hover:bg-gray-900 hover:text-white sm:w-80">
-                            Consultar
-                        </button>
-                    </div>
-                </div>
-
-
-
-                {/* Campo nombres completos */}
-                <div>
-                    <label className="mb-2 block text-sm font-semibold">Nombres completos</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Título del libro <span className="text-red-500">*</span>
+                    </label>
                     <input
                         type="text"
-                        placeholder="Ingresa nombre y apellido"
-                        className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
+                        placeholder="Ej: Cálculo diferencial - Stewart"
+                        className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                        {...register("titulo", { required: "El título es obligatorio" })}
                     />
+                    {errors.titulo && <p className="text-red-500 text-xs mt-1">{errors.titulo.message}</p>}
                 </div>
 
-
-                {/* Campo correo electrónico */}
+                {/* descripcion */}
                 <div>
-                    <label className="mb-2 block text-sm font-semibold">Correo electrónico</label>
-                    <input
-                        type="email"
-                        placeholder="Ingresa el correo electrónico"
-                        className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Descripción <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                        rows={4}
+                        placeholder="Describe el estado del libro, edición, autor, etc."
+                        className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 resize-none"
+                        {...register("descripcion", { required: "La descripción es obligatoria" })}
                     />
+                    {errors.descripcion && <p className="text-red-500 text-xs mt-1">{errors.descripcion.message}</p>}
                 </div>
 
-
-                {/* Campo celular */}
+                {/* precio */}
                 <div>
-                    <label className="mb-2 block text-sm font-semibold">Celular</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Precio (USD) <span className="text-red-500">*</span>
+                    </label>
                     <input
-                        type="text"
-                        inputMode="tel"
-                        placeholder="Ingresa el celular"
-                        className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="Ej: 15.00"
+                        className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                        {...register("precio", {
+                            required: "El precio es obligatorio",
+                            min: { value: 0, message: "El precio no puede ser negativo" }
+                        })}
                     />
+                    {errors.precio && <p className="text-red-500 text-xs mt-1">{errors.precio.message}</p>}
                 </div>
 
-            </fieldset>
-
-
-
-            {/* Información del paciente */}
-
-            <fieldset className="border-2 border-gray-500 p-6 rounded-lg shadow-lg mt-10">
-
-                <legend className="text-xl font-bold text-gray-700 bg-gray-200 px-4 py-1 rounded-md">
-                    Información de la mascota
-                </legend>
-
-
-                {/* Campo nombre de la mascota */}
+                {/* imagen */}
                 <div>
-                    <label className="mb-2 block text-sm font-semibold">Nombre</label>
-                    <input
-                        type="text"
-                        placeholder="Ingresar nombre"
-                        className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
-                    />
-                </div>
-
-
-                {/* Campo imagen de la mascota*/}
-                <label className="mb-2 block text-sm font-semibold">Imagen de la mascota</label>
-                
-                <div className="flex gap-4 mb-2">
-                    {/* Opción: Imagen con IA */}
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            value="ia"
-                        />
-                        Generar con IA
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Imagen del libro <span className="text-gray-400 font-normal">(opcional)</span>
                     </label>
 
-                    {/* Opción: Subir Imagen */}
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            value="upload"
-                        />
-                        Subir Imagen
-                    </label>
-                </div>
-
-
-                {/* Campo imagen con IA */}
-                {selectedOption === "ia" && (
-                    <div className="mt-5">
-                        <label className="mb-2 block text-sm font-semibold">Imagen con IA</label>
-                        <div className="flex items-center gap-10 mb-5">
-                            <input
-                                type="text"
-                                placeholder="Ingresa el prompt"
-                                className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500"
-                                value={stateAvatar.prompt}
-                                onChange={(e) => setStateAvatar(prev => ({ ...prev, prompt: e.target.value }))}
-                            />
-                            <button
-                                type="button"
-                                className="py-1 px-8 bg-gray-600 text-slate-300 border rounded-xl hover:scale-110 duration-300 hover:bg-gray-900 hover:text-white sm:w-80"
-                                disabled={stateAvatar.loading}
-                            >
-                                {stateAvatar.loading ? "Generando..." : "Generar con IA"}
-                            </button>
-                        </div>
-                        {stateAvatar.generatedImage && (
-                            <img src={stateAvatar.generatedImage} alt="Avatar IA" width={100} height={100} />
+                    <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-500 transition-colors bg-gray-50 py-6">
+                        {preview ? (
+                            <img src={preview} alt="preview" className="h-40 object-contain rounded-md" />
+                        ) : (
+                            <div className="flex flex-col items-center gap-2 text-gray-400">
+                                <MdCloudUpload className="text-4xl" />
+                                <span className="text-sm">Haz clic para subir una imagen</span>
+                            </div>
                         )}
-                    </div>
-                )}
-
-
-                {/* Campo subir imagen */}
-                {selectedOption === "upload" && (
-                    <div className="mt-5">
-                        <label className="mb-2 block text-sm font-semibold">Subir Imagen</label>
                         <input
                             type="file"
                             accept="image/*"
-                            className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
+                            className="hidden"
+                            onChange={handleImageChange}
                         />
-                    </div>
-                )}
-
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Campo tipo de mascota */}
-                    <div>
-                        <label htmlFor="tipo" className="mb-2 block text-sm font-semibold">Tipo</label>
-                        <select
-                            id="tipo"
-                            className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700"
-                            defaultValue=""
-                        >
-                            <option value="">--- Seleccionar ---</option>
-                            <option value="gato">Gato</option>
-                            <option value="perro">Perro</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-
-
-                    {/* Campo fecha de nacimiento */}
-                    <div>
-                        <label htmlFor="fechaNacimiento" className="mb-2 block text-sm font-semibold">Fecha de nacimiento</label>
-                        <input
-                            id="fechaNacimiento"
-                            type="date"
-                            className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700"
-                        />
-                    </div>
-                </div>
-				
-
-                {/* Campo observación*/}
-                <div>
-                    <label className="mb-2 block text-sm font-semibold">Observación</label>
-                    <textarea
-                        placeholder="Ingresa el síntoma u observación de forma general"
-                        className="block w-full rounded-md border border-gray-300 py-1 px-2 text-gray-500 mb-5"
-                    />
+                    </label>
                 </div>
 
-            </fieldset>
+                {/* botones */}
+                <div className="flex gap-3 pt-2">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="flex items-center gap-2 bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        <MdBook />
+                        {loading ? "Publicando..." : "Publicar libro"}
+                    </button>
 
+                    <button
+                        type="button"
+                        onClick={() => navigate("/dashboard/list")}
+                        className="px-6 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                </div>
 
-            {/* Botón de registro */}
-            <input
-                type="submit"
-                className="bg-gray-800 w-full p-2 mt-5 text-slate-300 uppercase font-bold rounded-lg 
-                hover:bg-gray-600 cursor-pointer transition-all"
-                value="Registrar"
-            />
-
-        </form>
-
+            </form>
+        </>
     )
 }
