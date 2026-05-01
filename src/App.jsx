@@ -16,6 +16,7 @@ import Chat from './pages/Chat'
 import Reset from './pages/Reset'
 import Panel from './pages/Panel'
 import MisPublicaciones from './pages/MisPublicaciones'
+import Buscador from './pages/Buscador'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
 import storeAuth from './context/storeAuth'
@@ -56,6 +57,7 @@ function App() {
                   <Route index element={<Panel />} />
                   <Route path='profile' element={<Profile />} />
                   <Route path='list' element={<List />} />
+                  <Route path='buscar' element={<Buscador />} />
                   <Route path='details/:id' element={<Details />} />
                   <Route path='create' element={<Create />} />
                   <Route path='update/:id' element={<Update />} />
