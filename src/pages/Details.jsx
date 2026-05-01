@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router"
 import { ToastContainer } from "react-toastify"
-import { FaBook, FaPhone, FaEnvelope, FaUser, FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa"
+import { FaBook, FaPhone, FaEnvelope, FaUser, FaArrowLeft, FaEdit, FaTrash, FaWhatsapp } from "react-icons/fa"
 import { MdToggleOn, MdToggleOff } from "react-icons/md"
 import storePublicaciones from "../context/storePublicaciones"
 import storeAuth from "../context/storeAuth"
 
+const telefonoAWhatsapp = (telefono) => {
+    if (!telefono) return null
+    const limpio = telefono.replace(/\D/g, "")
+    if (limpio.startsWith("0") && limpio.length === 10) {
+        return "593" + limpio.slice(1)
+    }
+    if (limpio.startsWith("593")) return limpio
+    return null
+}
 
 const Details = () => {
     const { id } = useParams()
@@ -30,14 +39,18 @@ const Details = () => {
         )
     }
 
-    // si usuario autenticado es el dueño
     const esDueno = usuario?._id === publicacionActual.usuario?._id
+    const numeroWa = telefonoAWhatsapp(publicacionActual.usuario?.telefono)
+    const mensajeWa = encodeURIComponent(
+        `¡Hola! Estoy interesado en el libro "${publicacionActual.titulo}" en UniBooks por $${Number(publicacionActual.precio).toFixed(2)} aún está disponible?`
+    )
+    const linkWhatsapp = numeroWa ? `https://wa.me/${numeroWa}?text=${mensajeWa}` : null
 
     const handleCambiarEstado = async () => {
         const nuevoEstado = publicacionActual.estado === "disponible" ? "vendido" : "disponible"
         setLoadingEstado(true)
         await cambiarEstado(id, nuevoEstado)
-        await detallePublicacion(id) // recargar
+        await detallePublicacion(id)
         setLoadingEstado(false)
     }
 
@@ -133,6 +146,27 @@ const Details = () => {
                                         <span>{publicacionActual.usuario?.telefono ?? "—"}</span>
                                     </div>
                                 </div>
+
+                                {!esDueno && publicacionActual.estado === "disponible" && (
+                                    <div className="mt-5">
+                                        {linkWhatsapp ? (
+                                            <a
+                                                href={linkWhatsapp}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2.5 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold px-5 py-3 rounded-xl transition-colors shadow-md hover:shadow-lg text-sm"
+                                            >
+                                                <FaWhatsapp className="text-xl" />
+                                                Contactar al vendedor por WhatsApp
+                                            </a>
+                                        ) : (
+                                            <p className="text-xs text-gray-400 italic">
+                                                El vendedor no tiene un número WhatsApp válido registrado.
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
                             </div>
 
                             {/* acciones del dueño */}
