@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { ToastContainer } from "react-toastify"
 import { MdCloudUpload } from "react-icons/md"
-import storePublicaciones from "../context/storePublicaciones"
+import storePublicaciones, { CATEGORIAS } from "../context/storePublicaciones"
 
 
 
@@ -32,6 +32,7 @@ const Update = () => {
                 titulo:      publicacionActual.titulo,
                 descripcion: publicacionActual.descripcion,
                 precio:      publicacionActual.precio,
+                categoria:   publicacionActual.categoria ?? "",
             })
             setPreview(publicacionActual.imagen ?? null)
         }
@@ -49,9 +50,10 @@ const Update = () => {
         setLoading(true)
 
         const formData = new FormData()
-        formData.append("titulo",      dataForm.titulo)
+        formData.append("titulo", dataForm.titulo)
         formData.append("descripcion", dataForm.descripcion)
-        formData.append("precio",      dataForm.precio)
+        formData.append("precio", dataForm.precio)
+        formData.append("categoria", dataForm.categoria)
         if (archivo) {
             formData.append("imagen", archivo)
         }
@@ -87,6 +89,23 @@ const Update = () => {
                                 {...register("titulo", { required: "El título es obligatorio" })}
                             />
                             {errors.titulo && <p className="text-red-500 text-xs mt-1">{errors.titulo.message}</p>}
+                        </div>
+
+                        {/* categoria */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Categoría <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 bg-white"
+                                {...register("categoria", { required: "Selecciona una categoría" })}
+                            >
+                                <option value="">— Selecciona una categoría —</option>
+                                {CATEGORIAS.map((cat) => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+                            {errors.categoria && <p className="text-red-500 text-xs mt-1">{errors.categoria.message}</p>}
                         </div>
 
                         {/* Descripcioin */}
