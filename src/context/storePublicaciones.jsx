@@ -2,6 +2,18 @@ import { create } from "zustand"
 import axios from "axios"
 import { toast } from "react-toastify"
 
+export const CATEGORIAS = [
+    "Matemáticas",
+    "Física",
+    "Programación",
+    "Electrónica",
+    "Química",
+    "Administración",
+    "Economía",
+    "Humanidades",
+    "Inglés",
+    "Otros",
+]
 
 // lee el token del localStorage donde Zustand
 const getAuthHeaders = () => {
@@ -13,30 +25,51 @@ const getAuthHeaders = () => {
     }
 }
 
-const storePublicaciones = create((set, get) => ({
+const storePublicaciones = create((set) => ({
 
-    publicaciones: [],       // listado  disponibles
-    misPublicaciones: [],    // publicaciones del usuario 
-    publicacionActual: null, // detalle de una publicacin
+    publicaciones: [],  // listado de todas la publicaciones disponibles
+    misPublicaciones: [], // publicaciones del usuario logueado
+    publicacionActual: null, // detalle de una publicación específica
+    resultadosBusqueda: [], // resultados del buscador
+    buscando: false, // loading del buscador
 
-
-    
-    // api/publicaciones  
-
+     // /api/publicaciones 
     listarPublicaciones: async () => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicaciones`
             const { data } = await axios.get(url)
-            set({ publicaciones: data })
+            set({ publicaciones: data.publicaciones || data })
         } catch (error) {
             console.error(error)
             toast.error(error.response?.data?.msg || "Error al cargar publicaciones")
         }
     },
 
+    // bsqueda con filtros
+    buscarPublicaciones: async ({ titulo, categoria, precioMin, precioMax, estado } = {}) => {
+        set({ buscando: true })
+        try {
+            const params = new URLSearchParams()
+            if (titulo?.trim()) params.append("titulo", titulo.trim())
+            if (categoria && categoria !== "") params.append("categoria", categoria)
+            if (precioMin !== "" && precioMin != null) params.append("precioMin", precioMin)
+            if (precioMax !== "" && precioMax != null) params.append("precioMax", precioMax)
+            if (estado && estado !== "") params.append("estado", estado)
 
-    // api/publicacion/:id  
+            const url = `${import.meta.env.VITE_BACKEND_URL}/publicaciones?${params.toString()}`
+            const { data } = await axios.get(url)
+            set({ resultadosBusqueda: data.publicaciones || data })
+        } catch (error) {
+            console.error(error)
+            toast.error(error.response?.data?.msg || "Error al buscar publicaciones")
+        } finally {
+            set({ buscando: false })
+        }
+    },
 
+    limpiarBusqueda: () => set({ resultadosBusqueda: [] }),
+
+    // detalle de una publicacion
     detallePublicacion: async (id) => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicacion/${id}`
@@ -50,16 +83,11 @@ const storePublicaciones = create((set, get) => ({
         }
     },
 
-
-
-    //  api/publicacion  privada -  token
-
+    // Crear una nueva publicacin
     crearPublicacion: async (formData) => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicacion`
-            const headers = getAuthHeaders()
-            // Para FormData NO se pone Content-Type (el navegador lo agrega con el boundary)
-            const { data } = await axios.post(url, formData, headers)
+            const { data } = await axios.post(url, formData, getAuthHeaders())
             toast.success(data.msg)
             return true
         } catch (error) {
@@ -69,14 +97,11 @@ const storePublicaciones = create((set, get) => ({
         }
     },
 
-
-    // api/publicacion/:id  privada
-
+    // Editar una publicacin propia
     editarPublicacion: async (id, formData) => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicacion/${id}`
-            const headers = getAuthHeaders()
-            const { data } = await axios.put(url, formData, headers)
+            const { data } = await axios.put(url, formData, getAuthHeaders())
             toast.success(data.msg)
             return true
         } catch (error) {
@@ -85,18 +110,14 @@ const storePublicaciones = create((set, get) => ({
             return false
         }
     },
-
-    // estado disponible  vendido
-
+     // Cambiar estado de una publicacin
     cambiarEstado: async (id, estado) => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicacion/${id}/estado`
-            const headers = getAuthHeaders()
-            // Para JSON sí agregamos Content-Type
-            headers.headers["Content-Type"] = "application/json"
-            const { data } = await axios.patch(url, { estado }, headers)
+            const auth = getAuthHeaders()
+            auth.headers["Content-Type"] = "application/json"
+            const { data } = await axios.patch(url, { estado }, auth)
             toast.success(data.msg)
-            // Actualizar en la lista local de mis publicaciones
             set((state) => ({
                 misPublicaciones: state.misPublicaciones.map((p) =>
                     p._id === id ? { ...p, estado } : p
@@ -110,16 +131,12 @@ const storePublicaciones = create((set, get) => ({
         }
     },
 
-
-    // api/publicacion/:id  privada
-
+    // Eliminar una publicacin propia
     eliminarPublicacion: async (id) => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/publicacion/${id}`
-            const headers = getAuthHeaders()
-            const { data } = await axios.delete(url, headers)
+            const { data } = await axios.delete(url, getAuthHeaders())
             toast.success(data.msg)
-            // Quitar de la lista local
             set((state) => ({
                 misPublicaciones: state.misPublicaciones.filter((p) => p._id !== id),
             }))
@@ -130,15 +147,13 @@ const storePublicaciones = create((set, get) => ({
             return false
         }
     },
-
-    // api/mis-publicaciones  privada
-
+     
+    // Listar mis propias publicaciones
     cargarMisPublicaciones: async () => {
         try {
             const url = `${import.meta.env.VITE_BACKEND_URL}/mis-publicaciones`
-            const headers = getAuthHeaders()
-            const { data } = await axios.get(url, headers)
-            set({ misPublicaciones: data })
+            const { data } = await axios.get(url, getAuthHeaders())
+            set({ misPublicaciones: data.publicaciones || data })
         } catch (error) {
             console.error(error)
             toast.error(error.response?.data?.msg || "Error al cargar tus publicaciones")
