@@ -10,11 +10,13 @@ const Dashboard = () => {
     const { clearToken } = storeAuth()
     const { user } = storeProfile()
 
+    const isAdmin = user?.rol === "admin"
+
     // clases activas e inactivas del menu
     const linkClass = (path) =>
         `${urlActual === path
             ? 'text-slate-200 bg-gray-900 px-3 py-2 rounded-md'
-            : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400`
+            : 'text-slate-600'} text-xl block mt-2 hover:text-slate-400 transition-colors`
 
     return (
         <div className='md:flex md:min-h-screen'>
@@ -50,33 +52,53 @@ const Dashboard = () => {
                             Perfil
                         </Link>
                     </li>
-                    <li className="text-center">
-                        <Link to='/dashboard/list' className={linkClass('/dashboard/list')}>
-                            Libros
-                        </Link>
-                    </li>
-
-                    <li className="text-center">
-                        <Link to='/dashboard/buscar' className={linkClass('/dashboard/buscar')}>
-                            Buscar
-                        </Link>
-                    </li>
-
-                    <li className="text-center">
-                        <Link to='/dashboard/mis-publicaciones' className={linkClass('/dashboard/mis-publicaciones')}>
-                            Mis libros
-                        </Link>
-                    </li>
-                    <li className="text-center">
-                        <Link to='/dashboard/create' className={linkClass('/dashboard/create')}>
-                            Publicar
-                        </Link>
-                    </li>
-                    <li className="text-center">
-                        <Link to='/dashboard/chat' className={linkClass('/dashboard/chat')}>
-                            Chat
-                        </Link>
-                    </li>
+                    {!isAdmin && (
+                        <>
+                            <li className="text-center">
+                                <Link to='/dashboard/list' className={linkClass('/dashboard/list')}>
+                                    Libros
+                                </Link>
+                            </li>
+                            <li className="text-center">
+                                <Link to='/dashboard/buscar' className={linkClass('/dashboard/buscar')}>
+                                    Buscar
+                                </Link>
+                            </li>
+                            <li className="text-center">
+                                <Link to='/dashboard/mis-publicaciones' className={linkClass('/dashboard/mis-publicaciones')}>
+                                    Mis libros
+                                </Link>
+                            </li>
+                            <li className="text-center">
+                                <Link to='/dashboard/create' className={linkClass('/dashboard/create')}>
+                                    Publicar
+                                </Link>
+                            </li>
+                            <li className="text-center">
+                                <Link to='/dashboard/chat' className={linkClass('/dashboard/chat')}>
+                                    Chat
+                                </Link>
+                            </li>
+                        </>
+                    )}
+                    {isAdmin && (
+                        <>
+                            <hr className="my-3 border-slate-600" />
+                            <p className="text-xs text-slate-500 uppercase tracking-widest px-2 mb-1 text-center">
+                                Administración
+                            </p>
+                            <li className="text-center">
+                                <Link to='/dashboard/admin/usuarios' className={linkClass('/dashboard/admin/usuarios')}>
+                                    Usuarios
+                                </Link>
+                            </li>
+                            <li className="text-center">
+                                <Link to='/dashboard/admin/publicaciones' className={linkClass('/dashboard/admin/publicaciones')}>
+                                    Publicaciones
+                                </Link>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </div>
 
@@ -86,8 +108,13 @@ const Dashboard = () => {
 
                 {/* Barra superior */}
                 <div className='bg-gray-800 py-2 flex md:justify-end items-center gap-5 justify-center'>
-                    <div className='text-md font-semibold text-slate-100'>
-                        Usuario - {user?.nombre}
+                    <div className='text-md font-semibold text-slate-100 flex items-center gap-2'>
+                        {isAdmin && (
+                            <span className="bg-red-700 text-white text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                                Admin
+                            </span>
+                        )}
+                        {user?.nombre}
                     </div>
                     <div>
                         <img

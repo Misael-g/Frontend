@@ -17,8 +17,12 @@ import Reset from './pages/Reset'
 import Panel from './pages/Panel'
 import MisPublicaciones from './pages/MisPublicaciones'
 import Buscador from './pages/Buscador'
+import AdminUsuarios from './pages/AdminUsuarios'
+import AdminDetalleUsuario from './pages/AdminDetalleUsuario'
+import AdminPublicaciones from './pages/AdminPublicaciones'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
+import AdminRoute from './routes/AdminRoute'
 import storeAuth from './context/storeAuth'
 import storeProfile from './context/storeProfile'
 
@@ -27,11 +31,8 @@ function App() {
   const { token } = storeAuth()
   const { profile } = storeProfile()
  
-  // Cada vez que haya token activo, carga los datos del perfil desde el backend
   useEffect(() => {
-    if (token) {
-      profile()
-    }
+    if (token) profile()
   }, [token])
   return (
     <>
@@ -57,12 +58,17 @@ function App() {
                   <Route index element={<Panel />} />
                   <Route path='profile' element={<Profile />} />
                   <Route path='list' element={<List />} />
-                  <Route path='buscar' element={<Buscador />} />
                   <Route path='details/:id' element={<Details />} />
                   <Route path='create' element={<Create />} />
                   <Route path='update/:id' element={<Update />} />
-                  <Route path='mis-publicaciones' element={<MisPublicaciones />} />  
+                  <Route path='mis-publicaciones' element={<MisPublicaciones />} />
+                  <Route path='buscar' element={<Buscador />} />
                   <Route path='chat' element={<Chat />} />
+                  <Route element={<AdminRoute />}>
+                    <Route path='admin/usuarios' element={<AdminUsuarios />} />
+                    <Route path='admin/usuario/:id' element={<AdminDetalleUsuario />} />
+                    <Route path='admin/publicaciones' element={<AdminPublicaciones />} />
+                  </Route>
                 </Route>
               </Routes>
             </ProtectedRoute>
