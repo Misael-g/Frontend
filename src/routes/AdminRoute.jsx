@@ -6,8 +6,7 @@ import storeProfile from "../context/storeProfile"
 const AdminRoute = () => {
     const { user } = storeProfile()
 
-    // no rendirizar si no hay rol 
-    if (!user) return null
+    if (!user) return null // espera a que cargue el perfil
 
     return user.rol === "admin"
         ? <Outlet />
