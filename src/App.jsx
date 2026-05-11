@@ -23,6 +23,7 @@ import AdminPublicaciones from './pages/AdminPublicaciones'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
+import UserRoute from './routes/UserRoute'
 import storeAuth from './context/storeAuth'
 import storeProfile from './context/storeProfile'
 
@@ -57,13 +58,15 @@ function App() {
                 <Route element={<Dashboard />}>
                   <Route index element={<Panel />} />
                   <Route path='profile' element={<Profile />} />
-                  <Route path='list' element={<List />} />
-                  <Route path='details/:id' element={<Details />} />
-                  <Route path='create' element={<Create />} />
-                  <Route path='update/:id' element={<Update />} />
-                  <Route path='mis-publicaciones' element={<MisPublicaciones />} />
-                  <Route path='buscar' element={<Buscador />} />
-                  <Route path='chat' element={<Chat />} />
+                  <Route element={<UserRoute />}>
+                    <Route path='list' element={<List />} />
+                    <Route path='details/:id' element={<Details />} />
+                    <Route path='create' element={<Create />} />
+                    <Route path='update/:id' element={<Update />} />
+                    <Route path='mis-publicaciones' element={<MisPublicaciones />} />
+                    <Route path='buscar' element={<Buscador />} />
+                    <Route path='chat' element={<Chat />} />
+                  </Route>
                   <Route element={<AdminRoute />}>
                     <Route path='admin/usuarios' element={<AdminUsuarios />} />
                     <Route path='admin/usuario/:id' element={<AdminDetalleUsuario />} />
