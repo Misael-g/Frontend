@@ -52,39 +52,39 @@ const Dashboard = () => {
                 <ul className="flex-1">
                     <li>
                         <Link to='/dashboard' className={linkClass('/dashboard')}>
-                            📊 Dashboard
+                            Dashboard
                         </Link>
                     </li>
                     <li>
                         <Link to='/dashboard/profile' className={linkClass('/dashboard/profile')}>
-                            👤 Perfil
+                            Perfil
                         </Link>
                     </li>
                     {!isAdmin && (
                         <>
                             <li>
                                 <Link to='/dashboard/list' className={linkClass('/dashboard/list')}>
-                                    📚 Libros
+                                    Libros
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/buscar' className={linkClass('/dashboard/buscar')}>
-                                    🔍 Buscar
+                                    Buscar
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/mis-publicaciones' className={linkClass('/dashboard/mis-publicaciones')}>
-                                    🗂️ Mis libros
+                                    Mis libros
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/create' className={linkClass('/dashboard/create')}>
-                                    ➕ Publicar
+                                    Publicar
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/chat' className={linkClass('/dashboard/chat')}>
-                                    💬 Chat
+                                    Chat
                                 </Link>
                             </li>
                         </>
@@ -98,12 +98,12 @@ const Dashboard = () => {
                             </div>
                             <li>
                                 <Link to='/dashboard/admin/usuarios' className={linkClass('/dashboard/admin/usuarios')}>
-                                    👥 Usuarios
+                                    Usuarios
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/admin/publicaciones' className={linkClass('/dashboard/admin/publicaciones')}>
-                                    📋 Publicaciones
+                                    Publicaciones
                                 </Link>
                             </li>
                         </>
