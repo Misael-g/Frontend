@@ -5,7 +5,20 @@ import { MdFilterList } from "react-icons/md"
 import storeAdmin from "../context/storeAdmin"
 import { CATEGORIAS } from "../context/storePublicaciones"
 
+const C = { primary:'#1a3a5c', accent:'#e8a020', border:'#e2e8f0', muted:'#64748b', bg:'#f8fafc' }
 const FILTROS_INICIALES = { titulo: "", categoria: "", estado: "" }
+
+const inputStyle = {
+    border: `1.5px solid ${C.border}`,
+    borderRadius: 8,
+    padding: '8px 12px',
+    fontSize: '0.875rem',
+    color: '#1a2332',
+    width: '100%',
+    outline: 'none',
+    background: '#fff',
+    transition: 'border-color 0.2s',
+}
 
 const AdminPublicaciones = () => {
     const { publicacionesAdmin, listarTodasPublicaciones, eliminarPublicacionAdmin, loadingAdmin } = storeAdmin()
@@ -41,10 +54,11 @@ const AdminPublicaciones = () => {
     }
 
     const hayFiltros = Object.values(filtros).some((v) => v !== "")
-
-    // metricas rapidas
     const disponibles = publicacionesAdmin.filter(p => p.estado === "disponible").length
     const vendidos    = publicacionesAdmin.filter(p => p.estado === "vendido").length
+
+    const focusIn  = e => { e.target.style.borderColor = C.primary }
+    const focusOut = e => { e.target.style.borderColor = C.border }
 
     return (
         <>
@@ -52,72 +66,57 @@ const AdminPublicaciones = () => {
 
             <div>
                 {/* encabezado */}
-                <h1 className="font-black text-4xl text-gray-500">Moderación de publicaciones</h1>
-                <hr className="my-4 border-t-2 border-gray-300" />
-                <p className="mb-6 text-gray-500">Revisa y elimina publicaciones inapropiadas de la plataforma</p>
+                <h1 className="font-black text-2xl" style={{color: C.primary}}>Moderación de publicaciones</h1>
+                <hr className="my-3" style={{borderColor: C.border}} />
+                <p className="mb-6 text-sm" style={{color: C.muted}}>Revisa y elimina publicaciones inapropiadas de la plataforma</p>
 
-                {/* metricas */}
+                {/* métricas */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-white rounded-xl shadow p-4 flex items-center gap-3">
-                        <div className="bg-gray-100 p-3 rounded-full"><FaBook className="text-gray-600 text-xl" /></div>
-                        <div>
-                            <p className="text-xs text-gray-500">Total mostradas</p>
-                            <p className="text-2xl font-bold text-gray-800">{publicacionesAdmin.length}</p>
+                    {[
+                        {label:'Total mostradas', value: publicacionesAdmin.length, ibg:'rgba(26,58,92,0.1)', ic:<FaBook style={{color:C.primary,fontSize:18}} />, vc: C.primary},
+                        {label:'Disponibles',     value: disponibles,               ibg:'#dcfce7', ic:<FaBook className="text-green-600" style={{fontSize:18}} />, vc:'#16a34a'},
+                        {label:'Vendidos',        value: vendidos,                  ibg:'#fee2e2', ic:<FaBook className="text-red-500" style={{fontSize:18}} />,   vc:'#dc2626'},
+                    ].map(({label, value, ibg, ic, vc}) => (
+                        <div key={label} className="rounded-xl p-5 flex items-center gap-4 shadow-sm"
+                            style={{background:'#fff', border:`1px solid ${C.border}`}}>
+                            <div className="p-3 rounded-full flex-shrink-0" style={{background: ibg}}>{ic}</div>
+                            <div>
+                                <p className="text-xs font-medium uppercase tracking-wide" style={{color: C.muted}}>{label}</p>
+                                <p className="text-3xl font-bold mt-0.5" style={{color: vc}}>{value}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="bg-white rounded-xl shadow p-4 flex items-center gap-3">
-                        <div className="bg-green-100 p-3 rounded-full"><FaBook className="text-green-600 text-xl" /></div>
-                        <div>
-                            <p className="text-xs text-gray-500">Disponibles</p>
-                            <p className="text-2xl font-bold text-green-700">{disponibles}</p>
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-xl shadow p-4 flex items-center gap-3">
-                        <div className="bg-red-100 p-3 rounded-full"><FaBook className="text-red-600 text-xl" /></div>
-                        <div>
-                            <p className="text-xs text-gray-500">Vendidos</p>
-                            <p className="text-2xl font-bold text-red-600">{vendidos}</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
-                {/* panel de filtros */}
-                <form onSubmit={handleBuscar} className="bg-white rounded-xl shadow p-5 mb-6">
-                    <div className="flex items-center gap-2 mb-4 text-gray-600 font-semibold text-sm">
-                        <MdFilterList className="text-lg" /> Filtros
+                {/* filtros */}
+                <form onSubmit={handleBuscar} className="rounded-xl p-5 mb-6 shadow-sm"
+                    style={{background:'#fff', border:`1px solid ${C.border}`}}>
+                    <div className="flex items-center gap-2 mb-4 text-sm font-semibold" style={{color: C.primary}}>
+                        <MdFilterList className="text-lg" style={{color: C.accent}} /> Filtros
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-                        {/* titulo */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
+                            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wide" style={{color: C.muted}}>
                                 Título
                             </label>
                             <div className="relative">
-                                <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                                <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-xs" style={{color: C.muted}} />
                                 <input
-                                    type="text"
-                                    name="titulo"
-                                    value={filtros.titulo}
-                                    onChange={handleChange}
-                                    placeholder="Buscar por título..."
-                                    className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
+                                    type="text" name="titulo" value={filtros.titulo}
+                                    onChange={handleChange} placeholder="Buscar por título..."
+                                    style={{...inputStyle, paddingLeft:32}}
+                                    onFocus={focusIn} onBlur={focusOut}
                                 />
                             </div>
                         </div>
 
-                        {/* categoria */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
+                            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wide" style={{color: C.muted}}>
                                 Categoría
                             </label>
-                            <select
-                                name="categoria"
-                                value={filtros.categoria}
-                                onChange={handleChange}
-                                className="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gray-500 bg-white"
-                            >
+                            <select name="categoria" value={filtros.categoria} onChange={handleChange}
+                                style={inputStyle} onFocus={focusIn} onBlur={focusOut}>
                                 <option value="">Todas</option>
                                 {CATEGORIAS.map((cat) => (
                                     <option key={cat} value={cat}>{cat}</option>
@@ -125,17 +124,12 @@ const AdminPublicaciones = () => {
                             </select>
                         </div>
 
-                        {/* estado */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
+                            <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wide" style={{color: C.muted}}>
                                 Estado
                             </label>
-                            <select
-                                name="estado"
-                                value={filtros.estado}
-                                onChange={handleChange}
-                                className="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gray-500 bg-white"
-                            >
+                            <select name="estado" value={filtros.estado} onChange={handleChange}
+                                style={inputStyle} onFocus={focusIn} onBlur={focusOut}>
                                 <option value="">Todos</option>
                                 <option value="disponible">Disponible</option>
                                 <option value="vendido">Vendido</option>
@@ -147,15 +141,20 @@ const AdminPublicaciones = () => {
                         <button
                             type="submit"
                             disabled={loadingAdmin}
-                            className="flex items-center gap-2 bg-gray-800 text-white px-5 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm disabled:opacity-60"
+                            className="flex items-center gap-2 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60"
+                            style={{background: C.primary}}
+                            onMouseOver={e => !loadingAdmin && (e.currentTarget.style.background='#0f2540')}
+                            onMouseOut={e => e.currentTarget.style.background=C.primary}
                         >
                             <FaSearch /> Filtrar
                         </button>
                         {hayFiltros && (
                             <button
-                                type="button"
-                                onClick={handleLimpiar}
-                                className="flex items-center gap-2 border border-gray-300 text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                                type="button" onClick={handleLimpiar}
+                                className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                style={{border:`1.5px solid ${C.border}`, color: C.muted}}
+                                onMouseOver={e => e.currentTarget.style.background=C.bg}
+                                onMouseOut={e => e.currentTarget.style.background='transparent'}
                             >
                                 <FaTimesCircle /> Limpiar
                             </button>
@@ -166,64 +165,59 @@ const AdminPublicaciones = () => {
                 {/* tabla */}
                 {loadingAdmin ? (
                     <div className="flex justify-center py-16">
-                        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-800 border-t-transparent" />
+                        <div className="animate-spin rounded-full h-10 w-10 border-4 border-t-transparent"
+                            style={{borderColor:`${C.primary} ${C.border} ${C.border}`}} />
                     </div>
                 ) : publicacionesAdmin.length === 0 ? (
-                    <div className="flex flex-col items-center py-16 text-gray-300">
-                        <FaBook className="text-6xl mb-4" />
-                        <p className="text-gray-500 font-semibold">No hay publicaciones con esos filtros</p>
+                    <div className="flex flex-col items-center py-16">
+                        <FaBook className="text-6xl mb-4" style={{color: C.border}} />
+                        <p className="font-semibold" style={{color: C.muted}}>No hay publicaciones con esos filtros</p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full table-auto shadow-lg bg-white rounded-lg overflow-hidden">
-                            <thead className="bg-gray-800 text-slate-400">
-                                <tr>
-                                    <th className="p-3 text-left">N°</th>
-                                    <th className="p-3 text-left">Imagen</th>
-                                    <th className="p-3 text-left">Título</th>
-                                    <th className="p-3 text-left">Categoría</th>
-                                    <th className="p-3 text-left">Precio</th>
-                                    <th className="p-3 text-left">Estado</th>
-                                    <th className="p-3 text-left">Vendedor</th>
-                                    <th className="p-3 text-center">Acción</th>
+                    <div className="overflow-x-auto rounded-xl shadow-sm" style={{border:`1px solid ${C.border}`}}>
+                        <table className="w-full table-auto bg-white rounded-xl overflow-hidden">
+                            <thead>
+                                <tr style={{background: C.primary}}>
+                                    {['N°','Imagen','Título','Categoría','Precio','Estado','Vendedor','Acción'].map(h => (
+                                        <th key={h} className="p-3 text-left text-xs font-semibold uppercase tracking-wide text-white">{h}</th>
+                                    ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {publicacionesAdmin.map((pub, index) => (
-                                    <tr key={pub._id} className="border-b border-gray-100 hover:bg-gray-50">
+                                    <tr key={pub._id} className="border-b transition-colors hover:bg-blue-50/30"
+                                        style={{borderColor: C.border}}>
 
-                                        <td className="p-3 text-gray-500 text-sm">{index + 1}</td>
+                                        <td className="p-3 text-sm" style={{color: C.muted}}>{index + 1}</td>
 
-                                        {/* Imagen */}
                                         <td className="p-3">
                                             {pub.imagen ? (
-                                                <img
-                                                    src={pub.imagen}
-                                                    alt={pub.titulo}
-                                                    className="h-12 w-12 object-cover rounded-md border border-gray-200"
-                                                />
+                                                <img src={pub.imagen} alt={pub.titulo}
+                                                    className="h-11 w-11 object-cover rounded-lg"
+                                                    style={{border:`1px solid ${C.border}`}} />
                                             ) : (
-                                                <div className="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center">
-                                                    <FaBook className="text-gray-300 text-xl" />
+                                                <div className="h-11 w-11 rounded-lg flex items-center justify-center"
+                                                    style={{background: C.bg}}>
+                                                    <FaBook style={{color: C.border}} />
                                                 </div>
                                             )}
                                         </td>
 
-                                        {/* Título */}
-                                        <td className="p-3 font-semibold text-gray-800 max-w-xs">
-                                            <p className="truncate max-w-[180px]">{pub.titulo}</p>
-                                            <p className="text-xs text-gray-400 truncate max-w-[180px]">{pub.descripcion}</p>
+                                        <td className="p-3 max-w-xs">
+                                            <p className="truncate max-w-[180px] font-semibold text-sm" style={{color: C.primary}}>
+                                                {pub.titulo}
+                                            </p>
+                                            <p className="text-xs truncate max-w-[180px]" style={{color: C.muted}}>
+                                                {pub.descripcion}
+                                            </p>
                                         </td>
 
-                                        {/* Categoria */}
-                                        <td className="p-3 text-sm text-gray-500">{pub.categoria}</td>
+                                        <td className="p-3 text-sm" style={{color: C.muted}}>{pub.categoria}</td>
 
-                                        {/* precio */}
-                                        <td className="p-3 font-bold text-green-700 whitespace-nowrap">
+                                        <td className="p-3 font-bold text-green-700 whitespace-nowrap text-sm">
                                             ${Number(pub.precio).toFixed(2)}
                                         </td>
 
-                                        {/* estado */}
                                         <td className="p-3">
                                             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                                                 pub.estado === "disponible"
@@ -234,13 +228,11 @@ const AdminPublicaciones = () => {
                                             </span>
                                         </td>
 
-                                        {/* vendedor */}
-                                        <td className="p-3 text-sm text-gray-600">
-                                            <p className="font-semibold">{pub.usuario?.nombre ?? "—"}</p>
-                                            <p className="text-xs text-gray-400">{pub.usuario?.email ?? ""}</p>
+                                        <td className="p-3 text-sm" style={{color: C.muted}}>
+                                            <p className="font-semibold" style={{color:'#334155'}}>{pub.usuario?.nombre ?? "—"}</p>
+                                            <p className="text-xs">{pub.usuario?.email ?? ""}</p>
                                         </td>
 
-                                        {/* eliminar */}
                                         <td className="p-3 text-center">
                                             <button
                                                 onClick={() => handleEliminar(pub._id, pub.titulo)}
@@ -257,7 +249,7 @@ const AdminPublicaciones = () => {
                             </tbody>
                         </table>
 
-                        <p className="text-xs text-gray-400 mt-3 text-right">
+                        <p className="text-xs px-4 py-2 text-right" style={{color:'#94a3b8'}}>
                             {publicacionesAdmin.length} publicación{publicacionesAdmin.length !== 1 ? "es" : ""} mostrada{publicacionesAdmin.length !== 1 ? "s" : ""}
                         </p>
                     </div>
