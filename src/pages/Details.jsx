@@ -6,6 +6,8 @@ import { MdToggleOn, MdToggleOff } from "react-icons/md"
 import storePublicaciones from "../context/storePublicaciones"
 import storeAuth from "../context/storeAuth"
 
+const C = { primary:'#1a3a5c', accent:'#e8a020', border:'#e2e8f0', muted:'#64748b', bg:'#f8fafc' }
+
 const telefonoAWhatsapp = (telefono) => {
     if (!telefono) return null
     const limpio = telefono.replace(/\D/g, "")
@@ -34,7 +36,8 @@ const Details = () => {
     if (!publicacionActual) {
         return (
             <div className="flex items-center justify-center h-40">
-                <p className="text-gray-400 text-lg">Cargando publicación...</p>
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-t-transparent"
+                    style={{borderColor:`${C.primary} ${C.border} ${C.border}`}} />
             </div>
         )
     }
@@ -70,24 +73,29 @@ const Details = () => {
                 {/* encabezado */}
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h1 className="font-black text-4xl text-gray-500">Detalle</h1>
-                        <hr className="my-3 border-t-2 border-gray-300" />
-                        <p className="text-gray-500">Información completa de la publicación</p>
+                        <h1 className="font-black text-2xl" style={{color: C.primary}}>Detalle</h1>
+                        <hr className="my-3" style={{borderColor: C.border}} />
+                        <p className="text-sm" style={{color: C.muted}}>Información completa de la publicación</p>
                     </div>
                     <Link
                         to="/dashboard/list"
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-2 hover:bg-gray-100 transition-colors"
+                        className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg transition-colors"
+                        style={{border:`1px solid ${C.border}`, color: C.muted}}
+                        onMouseOver={e => e.currentTarget.style.background=C.bg}
+                        onMouseOut={e => e.currentTarget.style.background='transparent'}
                     >
                         <FaArrowLeft /> Volver
                     </Link>
                 </div>
 
                 {/* tarjeta principal */}
-                <div className="bg-white rounded-xl shadow-md overflow-hidden mt-4">
-                    <div className="flex flex-col md:flex-row gap-0">
+                <div className="rounded-xl shadow-sm overflow-hidden mt-4"
+                    style={{background:'#fff', border:`1px solid ${C.border}`}}>
+                    <div className="flex flex-col md:flex-row">
 
                         {/* Imagen */}
-                        <div className="md:w-1/3 bg-gray-100 flex items-center justify-center p-6 min-h-64">
+                        <div className="md:w-1/3 flex items-center justify-center p-6 min-h-64"
+                            style={{background: C.bg}}>
                             {publicacionActual.imagen ? (
                                 <img
                                     src={publicacionActual.imagen}
@@ -95,9 +103,9 @@ const Details = () => {
                                     className="object-contain max-h-72 rounded-lg"
                                 />
                             ) : (
-                                <div className="flex flex-col items-center text-gray-300">
+                                <div className="flex flex-col items-center" style={{color: C.border}}>
                                     <FaBook className="text-7xl mb-3" />
-                                    <span className="text-sm">Sin imagen</span>
+                                    <span className="text-sm" style={{color: C.muted}}>Sin imagen</span>
                                 </div>
                             )}
                         </div>
@@ -108,7 +116,7 @@ const Details = () => {
                             {/* titulo y estado */}
                             <div>
                                 <div className="flex items-start justify-between gap-4 mb-3">
-                                    <h2 className="text-2xl font-bold text-gray-800">{publicacionActual.titulo}</h2>
+                                    <h2 className="text-2xl font-bold" style={{color: C.primary}}>{publicacionActual.titulo}</h2>
                                     <span className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ${
                                         publicacionActual.estado === "disponible"
                                             ? "bg-green-100 text-green-700"
@@ -124,25 +132,28 @@ const Details = () => {
                                 </p>
 
                                 {/* Descripción */}
-                                <p className="text-gray-600 leading-relaxed mb-6">
+                                <p className="leading-relaxed mb-6 text-sm" style={{color: C.muted}}>
                                     {publicacionActual.descripcion}
                                 </p>
 
                                 {/* datos del vendedor */}
-                                <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Contacto del vendedor</p>
-                                    <div className="flex items-center gap-2 text-gray-700 text-sm">
-                                        <FaUser className="text-gray-400" />
+                                <div className="rounded-lg p-4 space-y-2"
+                                    style={{background: C.bg, border:`1px solid ${C.border}`}}>
+                                    <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color: C.muted}}>
+                                        Contacto del vendedor
+                                    </p>
+                                    <div className="flex items-center gap-2 text-sm" style={{color:'#334155'}}>
+                                        <FaUser style={{color: C.accent}} />
                                         <span>{publicacionActual.usuario?.nombre ?? "—"}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-700 text-sm">
-                                        <FaEnvelope className="text-gray-400" />
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <FaEnvelope style={{color: C.accent}} />
                                         <a href={`mailto:${publicacionActual.usuario?.email}`} className="hover:underline text-blue-600">
                                             {publicacionActual.usuario?.email ?? "—"}
                                         </a>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-700 text-sm">
-                                        <FaPhone className="text-gray-400" />
+                                    <div className="flex items-center gap-2 text-sm" style={{color:'#334155'}}>
+                                        <FaPhone style={{color: C.accent}} />
                                         <span>{publicacionActual.usuario?.telefono ?? "—"}</span>
                                     </div>
                                 </div>
@@ -160,7 +171,7 @@ const Details = () => {
                                                 Contactar al vendedor por WhatsApp
                                             </a>
                                         ) : (
-                                            <p className="text-xs text-gray-400 italic">
+                                            <p className="text-xs italic" style={{color: C.muted}}>
                                                 El vendedor no tiene un número WhatsApp válido registrado.
                                             </p>
                                         )}
@@ -171,12 +182,16 @@ const Details = () => {
 
                             {/* acciones del dueño */}
                             {esDueno && (
-                                <div className="flex flex-wrap gap-3 mt-6 pt-5 border-t border-gray-200">
+                                <div className="flex flex-wrap gap-3 mt-6 pt-5"
+                                    style={{borderTop:`1px solid ${C.border}`}}>
 
                                     {/* Editar */}
                                     <Link
                                         to={`/dashboard/update/${id}`}
-                                        className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                                        className="flex items-center gap-2 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        style={{background: C.primary}}
+                                        onMouseOver={e => e.currentTarget.style.background='#0f2540'}
+                                        onMouseOut={e => e.currentTarget.style.background=C.primary}
                                     >
                                         <FaEdit /> Editar
                                     </Link>
@@ -185,7 +200,7 @@ const Details = () => {
                                     <button
                                         onClick={handleCambiarEstado}
                                         disabled={loadingEstado}
-                                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors text-sm disabled:opacity-60"
+                                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors text-sm font-semibold disabled:opacity-60"
                                     >
                                         {publicacionActual.estado === "disponible"
                                             ? <><MdToggleOff className="text-xl" /> Marcar como vendido</>
