@@ -5,7 +5,12 @@ import { ToastContainer } from "react-toastify"
 import { MdCloudUpload } from "react-icons/md"
 import storePublicaciones, { CATEGORIAS } from "../context/storePublicaciones"
 
+const C = { primary:'#1a3a5c', border:'#e2e8f0', muted:'#64748b', bg:'#f8fafc' }
 
+const fieldCls = "block w-full rounded-lg py-2 px-3 text-sm text-gray-700 outline-none transition-all"
+const fieldStyle = { border:`1.5px solid #e2e8f0`, background:'#fff' }
+const onFocus = e => { e.target.style.borderColor = C.primary; e.target.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }
+const onBlur  = e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = 'none' }
 
 const Update = () => {
     const { id } = useParams()
@@ -19,13 +24,13 @@ const Update = () => {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
-    // cargar datos actuales 
+    // Cargar datos actuales
     useEffect(() => {
         detallePublicacion(id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
-    //  formulario cuando llegan los datos
+    // Pre-llenar formulario cuando llegan los datos
     useEffect(() => {
         if (publicacionActual) {
             reset({
@@ -50,13 +55,11 @@ const Update = () => {
         setLoading(true)
 
         const formData = new FormData()
-        formData.append("titulo", dataForm.titulo)
+        formData.append("titulo",      dataForm.titulo)
         formData.append("descripcion", dataForm.descripcion)
-        formData.append("precio", dataForm.precio)
-        formData.append("categoria", dataForm.categoria)
-        if (archivo) {
-            formData.append("imagen", archivo)
-        }
+        formData.append("precio",      dataForm.precio)
+        formData.append("categoria",   dataForm.categoria)
+        if (archivo) formData.append("imagen", archivo)
 
         const ok = await editarPublicacion(id, formData)
         setLoading(false)
@@ -69,35 +72,45 @@ const Update = () => {
             <ToastContainer />
 
             <div>
-                <h1 className="font-black text-4xl text-gray-500">Editar publicación</h1>
-                <hr className="my-4 border-t-2 border-gray-300" />
-                <p className="mb-8 text-gray-500">Modifica los campos que deseas actualizar</p>
+                <h1 className="font-black text-2xl" style={{color: C.primary}}>Editar publicación</h1>
+                <hr className="my-3" style={{borderColor: C.border}} />
+                <p className="mb-6 text-sm" style={{color: C.muted}}>Modifica los campos que deseas actualizar</p>
 
                 {!publicacionActual ? (
-                    <p className="text-gray-400">Cargando datos...</p>
+                    <div className="flex items-center gap-3 py-8">
+                        <div className="animate-spin rounded-full h-6 w-6 border-4 border-t-transparent"
+                            style={{borderColor:`${C.primary} ${C.border} ${C.border}`}} />
+                        <p className="text-sm" style={{color: C.muted}}>Cargando datos...</p>
+                    </div>
                 ) : (
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-2xl">
 
-                        {/* titulo */}
+                        {/* Título */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
                                 Título <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
-                                className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                                className={fieldCls}
+                                style={fieldStyle}
+                                onFocus={onFocus} onBlur={onBlur}
                                 {...register("titulo", { required: "El título es obligatorio" })}
                             />
-                            {errors.titulo && <p className="text-red-500 text-xs mt-1">{errors.titulo.message}</p>}
+                            {errors.titulo && (
+                                <p className="text-red-500 text-xs mt-1">{errors.titulo.message}</p>
+                            )}
                         </div>
 
-                        {/* categoria */}
+                        {/* Categoría */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
                                 Categoría <span className="text-red-500">*</span>
                             </label>
                             <select
-                                className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 bg-white"
+                                className={fieldCls}
+                                style={fieldStyle}
+                                onFocus={onFocus} onBlur={onBlur}
                                 {...register("categoria", { required: "Selecciona una categoría" })}
                             >
                                 <option value="">— Selecciona una categoría —</option>
@@ -105,51 +118,70 @@ const Update = () => {
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
                             </select>
-                            {errors.categoria && <p className="text-red-500 text-xs mt-1">{errors.categoria.message}</p>}
+                            {errors.categoria && (
+                                <p className="text-red-500 text-xs mt-1">{errors.categoria.message}</p>
+                            )}
                         </div>
 
-                        {/* Descripcioin */}
+                        {/* Descripción */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
                                 Descripción <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 rows={4}
-                                className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 resize-none"
+                                className={fieldCls}
+                                style={{...fieldStyle, resize:'none'}}
+                                onFocus={onFocus} onBlur={onBlur}
                                 {...register("descripcion", { required: "La descripción es obligatoria" })}
                             />
-                            {errors.descripcion && <p className="text-red-500 text-xs mt-1">{errors.descripcion.message}</p>}
+                            {errors.descripcion && (
+                                <p className="text-red-500 text-xs mt-1">{errors.descripcion.message}</p>
+                            )}
                         </div>
 
-                        {/* precio */}
+                        {/* Precio */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
                                 Precio (USD) <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="number"
                                 step="0.01"
                                 min="0"
-                                className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-700 focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                                className={fieldCls}
+                                style={fieldStyle}
+                                onFocus={onFocus} onBlur={onBlur}
                                 {...register("precio", {
                                     required: "El precio es obligatorio",
                                     min: { value: 0, message: "El precio no puede ser negativo" }
                                 })}
                             />
-                            {errors.precio && <p className="text-red-500 text-xs mt-1">{errors.precio.message}</p>}
+                            {errors.precio && (
+                                <p className="text-red-500 text-xs mt-1">{errors.precio.message}</p>
+                            )}
                         </div>
 
-                        {/* imagen */}
+                        {/* Imagen */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Imagen <span className="text-gray-400 font-normal">(deja vacío para mantener la actual)</span>
+                            <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
+                                Imagen{' '}
+                                <span className="font-normal" style={{color: C.muted}}>
+                                    (deja vacío para mantener la actual)
+                                </span>
                             </label>
-                            <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-500 transition-colors bg-gray-50 py-6">
+                            <label
+                                className="flex flex-col items-center justify-center w-full rounded-xl cursor-pointer transition-colors py-6"
+                                style={{border:`2px dashed ${C.border}`, background: C.bg}}
+                                onMouseOver={e => e.currentTarget.style.borderColor = C.primary}
+                                onMouseOut={e =>  e.currentTarget.style.borderColor = C.border}
+                            >
                                 {preview ? (
-                                    <img src={preview} alt="preview" className="h-40 object-contain rounded-md" />
+                                    <img src={preview} alt="preview"
+                                        className="h-40 object-contain rounded-lg" />
                                 ) : (
-                                    <div className="flex flex-col items-center gap-2 text-gray-400">
-                                        <MdCloudUpload className="text-4xl" />
+                                    <div className="flex flex-col items-center gap-2" style={{color: C.muted}}>
+                                        <MdCloudUpload className="text-4xl" style={{color: C.primary}} />
                                         <span className="text-sm">Haz clic para cambiar imagen</span>
                                     </div>
                                 )}
@@ -162,12 +194,15 @@ const Update = () => {
                             </label>
                         </div>
 
-                        {/* botones */}
+                        {/* Botones */}
                         <div className="flex gap-3 pt-2">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="text-white px-6 py-2 rounded-lg font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                style={{background: C.primary}}
+                                onMouseOver={e => !loading && (e.currentTarget.style.background = '#0f2540')}
+                                onMouseOut={e =>  e.currentTarget.style.background = C.primary}
                             >
                                 {loading ? "Guardando..." : "Guardar cambios"}
                             </button>
@@ -175,7 +210,10 @@ const Update = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate(`/dashboard/details/${id}`)}
-                                className="px-6 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
+                                className="px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                style={{border:`1.5px solid ${C.border}`, color: C.muted}}
+                                onMouseOver={e => e.currentTarget.style.background = C.bg}
+                                onMouseOut={e =>  e.currentTarget.style.background = 'transparent'}
                             >
                                 Cancelar
                             </button>
