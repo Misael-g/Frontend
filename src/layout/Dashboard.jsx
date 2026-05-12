@@ -14,9 +14,9 @@ const Dashboard = () => {
 
     const linkClass = (path) =>
         `${urlActual === path
-            ? 'text-white bg-[#1a3a5c] px-3 py-2 rounded-lg font-semibold'
-            : 'text-slate-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg'
-        } text-sm block mt-1 transition-all duration-200`
+            ? 'text-white bg-[#1a3a5c] font-semibold'
+            : 'text-slate-300 hover:text-white hover:bg-white/10'
+        } text-sm block mt-1 px-3 py-2 rounded-lg transition-all duration-200 text-center`
 
     return (
         <div className='md:flex md:min-h-screen'>
@@ -32,7 +32,8 @@ const Dashboard = () => {
                 </div>
 
                 {/* Avatar + usuario */}
-                <div className='flex flex-col items-center mb-5 pb-5' style={{borderBottom:'1px solid rgba(255,255,255,0.1)'}}>
+                <div className='flex flex-col items-center mb-5 pb-5'
+                    style={{borderBottom:'1px solid rgba(255,255,255,0.1)'}}>
                     <div className='w-16 h-16 rounded-full flex items-center justify-center mb-3'
                         style={{background:'#1a3a5c', border:'2px solid #e8a020'}}>
                         <img
@@ -41,14 +42,17 @@ const Dashboard = () => {
                             className="w-10 h-10 object-contain opacity-90"
                         />
                     </div>
-                    <p className='text-white text-sm font-semibold'>{user?.nombre}</p>
+                    <p className='text-white text-sm font-semibold text-center'>{user?.nombre}</p>
                     <span className='text-xs px-2 py-0.5 rounded-full mt-1 capitalize font-medium'
-                        style={{background: isAdmin ? '#e8a020' : 'rgba(255,255,255,0.1)', color: isAdmin ? '#0f2030' : '#94a3b8'}}>
+                        style={{
+                            background: isAdmin ? '#e8a020' : 'rgba(255,255,255,0.1)',
+                            color:      isAdmin ? '#0f2030' : '#94a3b8',
+                        }}>
                         {user?.rol}
                     </span>
                 </div>
 
-                {/* Nav links */}
+                {/* Nav links — todos centrados */}
                 <ul className="flex-1">
                     <li>
                         <Link to='/dashboard' className={linkClass('/dashboard')}>
@@ -60,6 +64,7 @@ const Dashboard = () => {
                             Perfil
                         </Link>
                     </li>
+
                     {!isAdmin && (
                         <>
                             <li>
@@ -82,17 +87,15 @@ const Dashboard = () => {
                                     Publicar
                                 </Link>
                             </li>
-                            <li>
-                                <Link to='/dashboard/chat' className={linkClass('/dashboard/chat')}>
-                                    Chat
-                                </Link>
-                            </li>
+                            {/* Chat eliminado */}
                         </>
                     )}
+
                     {isAdmin && (
                         <>
-                            <div className='mt-4 mb-2 px-3'>
-                                <p className="text-xs uppercase tracking-widest font-semibold" style={{color:'#e8a020'}}>
+                            <div className='mt-4 mb-2 px-3 text-center'>
+                                <p className="text-xs uppercase tracking-widest font-semibold"
+                                    style={{color:'#e8a020'}}>
                                     Administración
                                 </p>
                             </div>
@@ -142,7 +145,7 @@ const Dashboard = () => {
                             className="text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors"
                             style={{background:'#c0392b'}}
                             onMouseOver={e => e.currentTarget.style.background='#96281b'}
-                            onMouseOut={e => e.currentTarget.style.background='#c0392b'}
+                            onMouseOut={e =>  e.currentTarget.style.background='#c0392b'}
                         >
                             Salir
                         </Link>
@@ -155,7 +158,8 @@ const Dashboard = () => {
                 </div>
 
                 {/* Footer */}
-                <div className='py-3 text-center text-xs font-medium' style={{background:'#1a3a5c', color:'rgba(255,255,255,0.6)'}}>
+                <div className='py-3 text-center text-xs font-medium'
+                    style={{background:'#1a3a5c', color:'rgba(255,255,255,0.6)'}}>
                     © 2025 UniBooks — Escuela Politécnica Nacional
                 </div>
 
