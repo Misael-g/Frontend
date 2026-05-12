@@ -4,6 +4,8 @@ import { MdVisibility } from "react-icons/md"
 import { FaBook } from "react-icons/fa"
 import storePublicaciones from "../../context/storePublicaciones"
 
+const C = { primary:'#1a3a5c', accent:'#e8a020', border:'#e2e8f0', muted:'#64748b', bg:'#f8fafc' }
+
 const Table = () => {
     const { publicaciones, listarPublicaciones } = storePublicaciones()
 
@@ -15,27 +17,31 @@ const Table = () => {
     return (
         <>
             {publicaciones.length === 0 ? (
-                <div className="p-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-                    <span className="font-medium">No hay publicaciones disponibles por el momento.</span>
+                <div className="flex flex-col items-center justify-center py-16">
+                    <FaBook className="text-6xl mb-4" style={{color: C.border}} />
+                    <p className="font-semibold mb-1" style={{color: C.muted}}>
+                        No hay publicaciones disponibles por el momento.
+                    </p>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="w-full mt-2 table-auto shadow-lg bg-white rounded-lg overflow-hidden">
-                        <thead className="bg-gray-800 text-slate-400">
-                            <tr>
-                                <th className="p-3 text-left">N°</th>
-                                <th className="p-3 text-left">Imagen</th>
-                                <th className="p-3 text-left">Título</th>
-                                <th className="p-3 text-left">Precio</th>
-                                <th className="p-3 text-left">Estado</th>
-                                <th className="p-3 text-left">Vendedor</th>
-                                <th className="p-3 text-center">Acciones</th>
+                <div className="overflow-x-auto rounded-xl shadow-sm"
+                    style={{border:`1px solid ${C.border}`}}>
+                    <table className="w-full mt-0 table-auto bg-white rounded-xl overflow-hidden">
+                        <thead>
+                            <tr style={{background: C.primary}}>
+                                {['N°','Imagen','Título','Precio','Estado','Vendedor','Acciones'].map(h => (
+                                    <th key={h} className="p-3 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                                        {h}
+                                    </th>
+                                ))}
                             </tr>
                         </thead>
                         <tbody>
                             {publicaciones.map((pub, index) => (
-                                <tr key={pub._id} className="hover:bg-gray-50 border-b border-gray-100">
-                                    <td className="p-3 text-gray-600">{index + 1}</td>
+                                <tr key={pub._id} className="border-b transition-colors hover:bg-blue-50/30"
+                                    style={{borderColor: C.border}}>
+
+                                    <td className="p-3 text-sm" style={{color: C.muted}}>{index + 1}</td>
 
                                     {/* imagen */}
                                     <td className="p-3">
@@ -43,22 +49,25 @@ const Table = () => {
                                             <img
                                                 src={pub.imagen}
                                                 alt={pub.titulo}
-                                                className="h-12 w-12 object-cover rounded-md border border-gray-200"
+                                                className="h-11 w-11 object-cover rounded-lg"
+                                                style={{border:`1px solid ${C.border}`}}
                                             />
                                         ) : (
-                                            <div className="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center">
-                                                <FaBook className="text-gray-400 text-xl" />
+                                            <div className="h-11 w-11 rounded-lg flex items-center justify-center"
+                                                style={{background: C.bg}}>
+                                                <FaBook style={{color: C.border}} />
                                             </div>
                                         )}
                                     </td>
 
                                     {/* titulo */}
-                                    <td className="p-3 font-semibold text-gray-800 max-w-xs truncate">
+                                    <td className="p-3 font-semibold text-sm max-w-xs truncate"
+                                        style={{color: C.primary}}>
                                         {pub.titulo}
                                     </td>
 
                                     {/* precio */}
-                                    <td className="p-3 text-green-700 font-bold">
+                                    <td className="p-3 font-bold text-green-700 text-sm">
                                         ${Number(pub.precio).toFixed(2)}
                                     </td>
 
@@ -74,7 +83,7 @@ const Table = () => {
                                     </td>
 
                                     {/* vendedor */}
-                                    <td className="p-3 text-gray-600 text-sm">
+                                    <td className="p-3 text-sm" style={{color: C.muted}}>
                                         {pub.usuario?.nombre ?? "—"}
                                     </td>
 
@@ -83,16 +92,23 @@ const Table = () => {
                                         <Link
                                             to={`/dashboard/details/${pub._id}`}
                                             title="Ver detalle"
-                                            className="inline-flex items-center gap-1 text-sm text-white bg-gray-700 hover:bg-gray-900 px-3 py-1.5 rounded-md transition-colors"
+                                            className="inline-flex items-center gap-1.5 text-xs text-white px-3 py-1.5 rounded-md transition-colors"
+                                            style={{background: C.primary}}
+                                            onMouseOver={e => e.currentTarget.style.background = '#0f2540'}
+                                            onMouseOut={e =>  e.currentTarget.style.background = C.primary}
                                         >
-                                            <MdVisibility className="text-base" />
-                                            Ver
+                                            <MdVisibility className="text-sm" /> Ver
                                         </Link>
                                     </td>
+
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+
+                    <p className="text-xs px-4 py-2 text-right" style={{color:'#94a3b8'}}>
+                        {publicaciones.length} libro{publicaciones.length !== 1 ? "s" : ""} disponible{publicaciones.length !== 1 ? "s" : ""}
+                    </p>
                 </div>
             )}
         </>
