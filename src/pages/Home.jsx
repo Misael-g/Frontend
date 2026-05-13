@@ -289,7 +289,7 @@ export const Home = () => {
                         <div>
                             <p className="font-semibold mb-1">
                                 <MdEmail className="inline mr-2" style={{color:'var(--accent)'}} />
-                                unibooks@epn.edu.ec
+                                unibooks08@gmail.com
                             </p>
                             <p className="text-blue-200 text-sm">Escuela Politécnica Nacional — Quito, Ecuador</p>
                         </div>
@@ -317,7 +317,7 @@ export const Home = () => {
 
                     <hr className="mt-10 border-white/10" />
                     <p className="text-center text-blue-300 text-xs mt-6">
-                        © 2025 UniBooks — Escuela Politécnica Nacional
+                        © 2025 UniBooks — Todos los derechos reservados
                     </p>
                 </div>
             </footer>
