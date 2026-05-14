@@ -12,7 +12,6 @@ import List from './pages/List'
 import Details from './pages/Details'
 import Create from './pages/Create'
 import Update from './pages/Update'
-import Chat from './pages/Chat'
 import Reset from './pages/Reset'
 import Panel from './pages/Panel'
 import MisPublicaciones from './pages/MisPublicaciones'
@@ -65,13 +64,13 @@ function App() {
                     <Route path='update/:id' element={<Update />} />
                     <Route path='mis-publicaciones' element={<MisPublicaciones />} />
                     <Route path='buscar' element={<Buscador />} />
-                    <Route path='chat' element={<Chat />} />
                   </Route>
                   <Route element={<AdminRoute />}>
                     <Route path='admin/usuarios' element={<AdminUsuarios />} />
                     <Route path='admin/usuario/:id' element={<AdminDetalleUsuario />} />
                     <Route path='admin/publicaciones' element={<AdminPublicaciones />} />
                   </Route>
+                  <Route path='*' element={<NotFound />} />
                 </Route>
               </Routes>
             </ProtectedRoute>
