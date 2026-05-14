@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { ToastContainer } from 'react-toastify'
 import { useFetch } from '../hooks/useFetch'
+import { reglasRecuperarPassword } from "../utils/validaciones"
 
 
 export const Forgot = () => {
@@ -10,7 +11,6 @@ export const Forgot = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm()
     const fetchDataBackend = useFetch()
 
-    // Enviar correo de recuperación al backend
     const sendMail = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/recuperarpassword`
         const response = await fetchDataBackend(url, dataForm, 'POST')
@@ -45,6 +45,13 @@ export const Forgot = () => {
                 .input-field:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+                }
+                .input-error {
+                    border-color: #dc2626 !important;
+                }
+                .input-error:focus {
+                    border-color: #dc2626 !important;
+                    box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
                 }
                 .btn-primary {
                     background: var(--primary);
@@ -112,7 +119,7 @@ export const Forgot = () => {
                             No te preocupes, ingresa tu correo y te enviaremos instrucciones para recuperarla.
                         </p>
 
-                        <form onSubmit={handleSubmit(sendMail)}>
+                        <form onSubmit={handleSubmit(sendMail)} noValidate>
 
                             {/* Correo */}
                             <div className="mb-5">
@@ -123,8 +130,8 @@ export const Forgot = () => {
                                 <input
                                     type="email"
                                     placeholder="Ingresa un correo electrónico válido"
-                                    className="input-field"
-                                    {...register("email", { required: "El correo electrónico es obligatorio" })}
+                                    className={`input-field${errors.email ? ' input-error' : ''}`}
+                                    {...register("email", reglasRecuperarPassword.email)}
                                 />
                                 {errors.email && (
                                     <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>

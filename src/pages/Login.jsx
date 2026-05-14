@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { ToastContainer } from 'react-toastify'
 import { useFetch } from '../hooks/useFetch'
 import storeAuth from "../context/storeAuth"
+import { reglasLogin } from "../utils/validaciones"
 
 
 const Login = () => {
@@ -16,14 +17,12 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm()
     const fetchDataBackend = useFetch()
 
-    // Acciones del store global de Zustand
     const { setToken, setRol, setUsuario } = storeAuth()
 
     const loginUser = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/login`
         const response = await fetchDataBackend(url, dataForm, 'POST')
         if (response) {
-            // Guardar token, rol y datos del usuario en el store
             setToken(response.token)
             setRol(response.rol)
             setUsuario({
@@ -65,6 +64,13 @@ const Login = () => {
                 .input-field:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+                }
+                .input-error {
+                    border-color: #dc2626 !important;
+                }
+                .input-error:focus {
+                    border-color: #dc2626 !important;
+                    box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
                 }
                 .btn-primary {
                     background: var(--primary);
@@ -137,12 +143,10 @@ const Login = () => {
                     </div>
                 </div>
 
-
                 {/* Formulario */}
                 <div className="w-full sm:w-1/2 flex justify-center items-center bg-white px-6">
                     <div className="w-full max-w-sm">
 
-                        {/* Logo móvil */}
                         <h2 className="unib-display text-3xl font-black text-center mb-1 sm:hidden"
                             style={{color:'var(--primary)'}}>
                             Uni<span style={{color:'var(--accent)'}}>Books</span>
@@ -155,7 +159,7 @@ const Login = () => {
                             Por favor ingresa tus datos para continuar
                         </p>
 
-                        <form onSubmit={handleSubmit(loginUser)}>
+                        <form onSubmit={handleSubmit(loginUser)} noValidate>
 
                             {/* Correo */}
                             <div className="mb-4">
@@ -166,8 +170,8 @@ const Login = () => {
                                 <input
                                     type="email"
                                     placeholder="Ingresa tu correo electrónico"
-                                    className="input-field"
-                                    {...register("email", { required: "El correo electrónico es obligatorio" })}
+                                    className={`input-field${errors.email ? ' input-error' : ''}`}
+                                    {...register("email", reglasLogin.email)}
                                 />
                                 {errors.email && (
                                     <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
@@ -184,8 +188,8 @@ const Login = () => {
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••••••"
-                                        className="input-field pr-10"
-                                        {...register("password", { required: "La contraseña es obligatoria" })}
+                                        className={`input-field pr-10${errors.password ? ' input-error' : ''}`}
+                                        {...register("password", reglasLogin.password)}
                                     />
                                     <button
                                         type="button"
@@ -202,7 +206,7 @@ const Login = () => {
                                 )}
                             </div>
 
-                            {/* Enlace olvidaste contraseña */}
+                            {/* Olvidaste contraseña */}
                             <div className="mb-6 text-right">
                                 <Link to="/forgot/id"
                                     className="unib-body text-xs"
@@ -217,13 +221,11 @@ const Login = () => {
 
                         </form>
 
-                        {/* Links inferiores */}
                         <div className="unib-body mt-6 pt-5 border-t flex justify-between items-center text-sm"
                             style={{borderColor:'var(--border)'}}>
                             <Link to="/" style={{color:'var(--text-muted)'}}>
                                 ← Regresar
                             </Link>
-                            
                             <Link to="/register"
                                 className="py-2 px-5 rounded-lg font-semibold text-sm border"
                                 style={{color:'var(--primary)', borderColor:'var(--primary)'}}>
@@ -232,7 +234,6 @@ const Login = () => {
                         </div>
 
                     </div>
-
                 </div>
 
             </div>

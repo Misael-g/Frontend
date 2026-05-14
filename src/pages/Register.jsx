@@ -5,23 +5,20 @@ import { Link } from "react-router"
 import { useForm } from "react-hook-form"
 import { ToastContainer } from "react-toastify"
 import { useFetch } from "../hooks/useFetch"
+import { reglasRegistro } from "../utils/validaciones"
 
 
 export const Register = () => {
 
     const [showPassword, setShowPassword] = useState(false)
 
-    // Hook de useFetch para llamar al backend
     const fetchDataBackend = useFetch()
 
-    // React Hook Form
     const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
-    // Función que se ejecuta al enviar el formulario
     const registerUser = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/registro`
         const response = await fetchDataBackend(url, dataForm, "POST")
-        // Si el backend respondió OK, limpiar el formulario
         if (response) reset()
     }
 
@@ -53,6 +50,13 @@ export const Register = () => {
                 .input-field:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+                }
+                .input-error {
+                    border-color: #dc2626 !important;
+                }
+                .input-error:focus {
+                    border-color: #dc2626 !important;
+                    box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
                 }
                 .btn-primary {
                     background: var(--primary);
@@ -101,80 +105,92 @@ export const Register = () => {
                             Por favor ingresa tus datos para registrarte
                         </p>
 
-                        <form onSubmit={handleSubmit(registerUser)}>
+                        <form onSubmit={handleSubmit(registerUser)} noValidate>
 
                             {/* Nombre */}
                             <div className="mb-3">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
-                                    Nombre
+                                    Nombre <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Ingresa tu nombre"
-                                    className="input-field"
-                                    {...register("nombre", { required: "El nombre es obligatorio" })}
+                                    placeholder="Ingresa tu nombre completo"
+                                    className={`input-field${errors.nombre ? ' input-error' : ''}`}
+                                    {...register("nombre", reglasRegistro.nombre)}
                                 />
-                                {errors.nombre && <p className="text-red-600 text-xs mt-1">{errors.nombre.message}</p>}
+                                {errors.nombre && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.nombre.message}</p>
+                                )}
                             </div>
 
                             {/* Teléfono */}
                             <div className="mb-3">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
-                                    Teléfono
+                                    Teléfono <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
                                     inputMode="tel"
-                                    placeholder="Ingresa tu teléfono"
-                                    className="input-field"
-                                    {...register("telefono", { required: "El teléfono es obligatorio" })}
+                                    placeholder="09XXXXXXXX"
+                                    className={`input-field${errors.telefono ? ' input-error' : ''}`}
+                                    {...register("telefono", reglasRegistro.telefono)}
                                 />
-                                {errors.telefono && <p className="text-red-600 text-xs mt-1">{errors.telefono.message}</p>}
+                                {errors.telefono && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.telefono.message}</p>
+                                )}
                             </div>
 
                             {/* Carrera (opcional) */}
                             <div className="mb-3">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
-                                    Carrera <span className="font-normal" style={{color:'var(--text-muted)'}}>(opcional)</span>
+                                    Carrera{' '}
+                                    <span className="font-normal" style={{color:'var(--text-muted)'}}>
+                                        (opcional)
+                                    </span>
                                 </label>
                                 <input
                                     type="text"
                                     placeholder="Ej: Ingeniería en Sistemas"
-                                    className="input-field"
-                                    {...register("carrera")}
+                                    className={`input-field${errors.carrera ? ' input-error' : ''}`}
+                                    {...register("carrera", reglasRegistro.carrera)}
                                 />
+                                {errors.carrera && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.carrera.message}</p>
+                                )}
                             </div>
 
                             {/* Correo */}
                             <div className="mb-3">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
-                                    Correo electrónico
+                                    Correo electrónico <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="email"
                                     placeholder="Ingresa tu correo electrónico"
-                                    className="input-field"
-                                    {...register("email", { required: "El correo electrónico es obligatorio" })}
+                                    className={`input-field${errors.email ? ' input-error' : ''}`}
+                                    {...register("email", reglasRegistro.email)}
                                 />
-                                {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>}
+                                {errors.email && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
+                                )}
                             </div>
 
                             {/* Contraseña */}
                             <div className="mb-5">
                                 <label className="unib-body block text-sm font-semibold mb-1.5"
                                     style={{color:'var(--primary)'}}>
-                                    Contraseña
+                                    Contraseña <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
                                     <input
                                         type={showPassword ? "text" : "password"}
-                                        placeholder="••••••••••••"
-                                        className="input-field pr-10"
-                                        {...register("password", { required: "La contraseña es obligatoria" })}
+                                        placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                                        className={`input-field pr-10${errors.password ? ' input-error' : ''}`}
+                                        {...register("password", reglasRegistro.password)}
                                     />
                                     <button
                                         type="button"
@@ -186,7 +202,15 @@ export const Register = () => {
                                         {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                                     </button>
                                 </div>
-                                {errors.password && <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>}
+                                {errors.password && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>
+                                )}
+                                {/* Ayuda visual solo cuando no hay error */}
+                                {!errors.password && (
+                                    <p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>
+                                        Mínimo 8 caracteres, al menos una mayúscula y un número
+                                    </p>
+                                )}
                             </div>
 
                             <button type="submit" className="btn-primary">

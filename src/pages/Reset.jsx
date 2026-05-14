@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import { FaBookOpen, FaLock } from 'react-icons/fa'
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md'
 import { useFetch } from '../hooks/useFetch'
+import { reglasNuevoPassword } from "../utils/validaciones"
 
 
 const Reset = () => {
@@ -13,29 +14,28 @@ const Reset = () => {
     const { token } = useParams()
     const fetchDataBackend = useFetch()
 
-    // Controla si el token es válido para mostrar el formulario
     const [tokenValido, setTokenValido] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirm, setShowConfirm] = useState(false)
 
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
 
-    // Al montar: verificar que el token del link sea válido
+    // watch para la validación cruzada de confirmación
+    const passwordValue = watch("password")
+
     useEffect(() => {
         const verifyToken = async () => {
             const url = `${import.meta.env.VITE_BACKEND_URL}/recuperarpassword/${token}`
-            await fetchDataBackend(url)   // GET por defecto
+            await fetchDataBackend(url)
             setTokenValido(true)
         }
         verifyToken()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Enviar nueva contraseña al backend
     const changePassword = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/nuevopassword/${token}`
         const response = await fetchDataBackend(url, dataForm, 'POST')
-        // Si la respuesta es exitosa, redirigir al login luego de 2 segundos
         if (response) {
             setTimeout(() => navigate('/login'), 2000)
         }
@@ -69,6 +69,13 @@ const Reset = () => {
                 .input-field:focus {
                     border-color: var(--primary);
                     box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+                }
+                .input-error {
+                    border-color: #dc2626 !important;
+                }
+                .input-error:focus {
+                    border-color: #dc2626 !important;
+                    box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
                 }
                 .btn-primary {
                     background: var(--primary);
@@ -129,7 +136,6 @@ const Reset = () => {
                 <div className="w-full sm:w-1/2 h-screen bg-white flex justify-center items-center px-6">
                     <div className="w-full max-w-sm">
 
-                        {/* Ícono */}
                         <div className="flex justify-center mb-5">
                             <div className="w-16 h-16 rounded-full flex items-center justify-center"
                                 style={{background:'var(--light-bg)'}}>
@@ -145,9 +151,8 @@ const Reset = () => {
                             Ingresa y confirma tu nueva contraseña
                         </p>
 
-                        {/* El formulario solo se muestra si el token es válido */}
                         {tokenValido && (
-                            <form onSubmit={handleSubmit(changePassword)}>
+                            <form onSubmit={handleSubmit(changePassword)} noValidate>
 
                                 {/* Nueva contraseña */}
                                 <div className="mb-4">
@@ -158,9 +163,9 @@ const Reset = () => {
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
-                                            placeholder="Ingresa tu nueva contraseña"
-                                            className="input-field pr-10"
-                                            {...register("password", { required: "La contraseña es obligatoria" })}
+                                            placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                                            className={`input-field pr-10${errors.password ? ' input-error' : ''}`}
+                                            {...register("password", reglasNuevoPassword.password)}
                                         />
                                         <button
                                             type="button"
@@ -174,6 +179,11 @@ const Reset = () => {
                                     {errors.password && (
                                         <p className="text-red-600 text-xs mt-1">{errors.password.message}</p>
                                     )}
+                                    {!errors.password && (
+                                        <p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>
+                                            Mínimo 8 caracteres, al menos una mayúscula y un número
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Confirmar contraseña */}
@@ -186,8 +196,12 @@ const Reset = () => {
                                         <input
                                             type={showConfirm ? "text" : "password"}
                                             placeholder="Repite tu contraseña"
-                                            className="input-field pr-10"
-                                            {...register("confirmpassword", { required: "Debes confirmar la contraseña" })}
+                                            className={`input-field pr-10${errors.confirmpassword ? ' input-error' : ''}`}
+                                            {...register("confirmpassword", {
+                                                required: "Debes confirmar la contraseña",
+                                                validate: v =>
+                                                    v === passwordValue || "Las contraseñas no coinciden"
+                                            })}
                                         />
                                         <button
                                             type="button"
@@ -210,7 +224,6 @@ const Reset = () => {
                             </form>
                         )}
 
-                        {/* Mientras se verifica el token */}
                         {!tokenValido && (
                             <p className="unib-body text-center text-sm" style={{color:'var(--text-muted)'}}>
                                 Verificando enlace...

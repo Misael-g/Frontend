@@ -1,15 +1,25 @@
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { ToastContainer } from "react-toastify"
+import { MdVisibility, MdVisibilityOff } from "react-icons/md"
 import storeProfile from "../../context/storeProfile"
 import storeAuth from "../../context/storeAuth"
+import { reglasCambiarPassword } from "../../utils/validaciones"
 
-const C = { primary:'#1a3a5c', border:'#e2e8f0' }
+const C = { primary:'#1a3a5c', border:'#e2e8f0', muted:'#64748b' }
+
+const fieldCls = "block w-full rounded-lg py-2 px-3 text-sm text-gray-700 outline-none transition-all"
 
 const CardPassword = () => {
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm()
+    const [showActual,  setShowActual]  = useState(false)
+    const [showNuevo,   setShowNuevo]   = useState(false)
+
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm()
     const { user, updatePasswordProfile } = storeProfile()
     const { clearToken } = storeAuth()
+
+    const passwordNuevoValue = watch("passwordnuevo")
 
     const updatePassword = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/actualizarpassword`
@@ -19,6 +29,13 @@ const CardPassword = () => {
             clearToken()
         }
     }
+
+    const fieldStyle      = { border:`1.5px solid ${C.border}` }
+    const fieldStyleError = { border:`1.5px solid #dc2626` }
+    const onFocus      = e => { e.target.style.borderColor = C.primary;   e.target.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }
+    const onBlur       = e => { e.target.style.borderColor = C.border;    e.target.style.boxShadow = 'none' }
+    const onFocusError = e => { e.target.style.borderColor = '#dc2626';   e.target.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.1)' }
+    const onBlurError  = e => { e.target.style.borderColor = '#dc2626';   e.target.style.boxShadow = 'none' }
 
     return (
         <>
@@ -32,22 +49,33 @@ const CardPassword = () => {
                 </h1>
                 <hr className="my-3" style={{borderColor: C.border}} />
 
-                <form onSubmit={handleSubmit(updatePassword)}>
+                <form onSubmit={handleSubmit(updatePassword)} noValidate>
 
                     {/* Contraseña actual */}
                     <div className="mb-4">
                         <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
-                            Contraseña actual
+                            Contraseña actual <span className="text-red-500">*</span>
                         </label>
-                        <input
-                            type="password"
-                            placeholder="Ingresa tu contraseña actual"
-                            className="block w-full rounded-lg py-2 px-3 text-sm text-gray-700 outline-none transition-all"
-                            style={{border:`1.5px solid ${C.border}`}}
-                            onFocus={e => { e.target.style.borderColor = C.primary; e.target.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
-                            onBlur={e =>  { e.target.style.borderColor = C.border;  e.target.style.boxShadow = 'none' }}
-                            {...register("passwordactual", { required: "La contraseña actual es obligatoria" })}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showActual ? "text" : "password"}
+                                placeholder="Ingresa tu contraseña actual"
+                                className={`${fieldCls} pr-10`}
+                                style={errors.passwordactual ? fieldStyleError : fieldStyle}
+                                onFocus={errors.passwordactual ? onFocusError : onFocus}
+                                onBlur={errors.passwordactual ? onBlurError : onBlur}
+                                {...register("passwordactual", reglasCambiarPassword.passwordactual)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowActual(!showActual)}
+                                className="absolute inset-y-0 right-3 flex items-center"
+                                style={{color: C.muted}}
+                                aria-label={showActual ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                {showActual ? <MdVisibilityOff size={18} /> : <MdVisibility size={18} />}
+                            </button>
+                        </div>
                         {errors.passwordactual && (
                             <p className="text-red-600 text-xs mt-1">{errors.passwordactual.message}</p>
                         )}
@@ -55,23 +83,38 @@ const CardPassword = () => {
                     </div>
 
                     {/* Nueva contraseña */}
-                    <div className="mb-5">
+                    <div className="mb-4">
                         <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
-                            Nueva contraseña
+                            Nueva contraseña <span className="text-red-500">*</span>
                         </label>
-                        <input
-                            type="password"
-                            placeholder="Ingresa la nueva contraseña"
-                            className="block w-full rounded-lg py-2 px-3 text-sm text-gray-700 outline-none transition-all"
-                            style={{border:`1.5px solid ${C.border}`}}
-                            onFocus={e => { e.target.style.borderColor = C.primary; e.target.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
-                            onBlur={e =>  { e.target.style.borderColor = C.border;  e.target.style.boxShadow = 'none' }}
-                            {...register("passwordnuevo", { required: "La nueva contraseña es obligatoria" })}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showNuevo ? "text" : "password"}
+                                placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                                className={`${fieldCls} pr-10`}
+                                style={errors.passwordnuevo ? fieldStyleError : fieldStyle}
+                                onFocus={errors.passwordnuevo ? onFocusError : onFocus}
+                                onBlur={errors.passwordnuevo ? onBlurError : onBlur}
+                                {...register("passwordnuevo", reglasCambiarPassword.passwordnuevo)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowNuevo(!showNuevo)}
+                                className="absolute inset-y-0 right-3 flex items-center"
+                                style={{color: C.muted}}
+                                aria-label={showNuevo ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                {showNuevo ? <MdVisibilityOff size={18} /> : <MdVisibility size={18} />}
+                            </button>
+                        </div>
                         {errors.passwordnuevo && (
                             <p className="text-red-600 text-xs mt-1">{errors.passwordnuevo.message}</p>
                         )}
-                        {!errors.passwordnuevo && <div className="mb-1" />}
+                        {!errors.passwordnuevo && (
+                            <p className="text-xs mt-1" style={{color: C.muted}}>
+                                Mínimo 8 caracteres, al menos una mayúscula y un número
+                            </p>
+                        )}
                     </div>
 
                     <input
