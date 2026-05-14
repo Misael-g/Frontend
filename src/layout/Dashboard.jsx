@@ -160,7 +160,7 @@ const Dashboard = () => {
                 {/* Footer */}
                 <div className='py-3 text-center text-xs font-medium'
                     style={{background:'#1a3a5c', color:'rgba(255,255,255,0.6)'}}>
-                    © 2025 UniBooks — Escuela Politécnica Nacional
+                    © 2025 UniBooks — Todos los derechos reservados
                 </div>
 
             </div>
