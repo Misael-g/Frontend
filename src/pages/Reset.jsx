@@ -163,7 +163,7 @@ const Reset = () => {
                                     <div className="relative">
                                         <input
                                             type={showPassword ? "text" : "password"}
-                                            placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                                            placeholder="Ingresa tu nueva contraseña"
                                             className={`input-field pr-10${errors.password ? ' input-error' : ''}`}
                                             {...register("password", reglasNuevoPassword.password)}
                                         />
@@ -181,7 +181,7 @@ const Reset = () => {
                                     )}
                                     {!errors.password && (
                                         <p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>
-                                            Mínimo 8 caracteres, al menos una mayúscula y un número
+                                            Mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
                                         </p>
                                     )}
                                 </div>

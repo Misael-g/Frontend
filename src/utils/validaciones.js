@@ -4,6 +4,7 @@ const SOLO_LETRAS_ESPACIOS = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/
 const TELEFONO_EC          = /^09\d{8}$/
 const TIENE_MAYUSCULA      = /[A-Z]/
 const TIENE_NUMERO         = /[0-9]/
+const TIENE_CARACTER_ESPECIAL = /[^A-Za-z0-9]/
 const SOLO_BASURA          = /^[^aeiouáéíóuAEIOUÁÉÍÓÚ]{8,}$/
 
 export const FORMATOS_IMAGEN_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp']
@@ -32,8 +33,9 @@ export const reglasRegistro = {
         required: 'La contraseña es obligatoria',
         minLength: { value: 8, message: 'La contraseña debe tener mínimo 8 caracteres' },
         validate: {
-            tieneMayuscula: v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
-            tieneNumero:    v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneMayuscula:     v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
+            tieneNumero:        v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneCaracterEspecial: v => TIENE_CARACTER_ESPECIAL.test(v) || 'Debe tener al menos un carácter especial',
         },
     },
     telefono: {
@@ -72,8 +74,9 @@ export const reglasNuevoPassword = {
         required: 'La contraseña es obligatoria',
         minLength: { value: 8, message: 'Debe tener mínimo 8 caracteres' },
         validate: {
-            tieneMayuscula: v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
-            tieneNumero:    v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneMayuscula:     v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
+            tieneNumero:        v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneCaracterEspecial: v => TIENE_CARACTER_ESPECIAL.test(v) || 'Debe tener al menos un carácter especial',
         },
     },
    
@@ -112,8 +115,9 @@ export const reglasCambiarPassword = {
         required: 'La nueva contraseña es obligatoria',
         minLength: { value: 8, message: 'Debe tener mínimo 8 caracteres' },
         validate: {
-            tieneMayuscula: v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
-            tieneNumero:    v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneMayuscula:     v => TIENE_MAYUSCULA.test(v) || 'Debe tener al menos una letra mayúscula',
+            tieneNumero:        v => TIENE_NUMERO.test(v)    || 'Debe tener al menos un número',
+            tieneCaracterEspecial: v => TIENE_CARACTER_ESPECIAL.test(v) || 'Debe tener al menos un carácter especial',
         },
     },
 }

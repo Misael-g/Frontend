@@ -90,7 +90,7 @@ const CardPassword = () => {
                         <div className="relative">
                             <input
                                 type={showNuevo ? "text" : "password"}
-                                placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                                placeholder="Ingresa tu nueva contraseña"
                                 className={`${fieldCls} pr-10`}
                                 style={errors.passwordnuevo ? fieldStyleError : fieldStyle}
                                 onFocus={errors.passwordnuevo ? onFocusError : onFocus}
@@ -112,7 +112,7 @@ const CardPassword = () => {
                         )}
                         {!errors.passwordnuevo && (
                             <p className="text-xs mt-1" style={{color: C.muted}}>
-                                Mínimo 8 caracteres, al menos una mayúscula y un número
+                                Mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
                             </p>
                         )}
                     </div>
