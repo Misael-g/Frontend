@@ -131,7 +131,7 @@ const Login = () => {
                     <div className="mt-10 flex flex-col gap-3 w-full max-w-xs">
                         {[
                             'Publicación sencilla de libros',
-                            'Búsqueda por título o autor',
+                            'Búsqueda por título o categoría',
                             'Contacto directo entre usuarios',
                         ].map((t, i) => (
                             <div key={i} className="unib-body flex items-center gap-3 text-sm text-blue-100">

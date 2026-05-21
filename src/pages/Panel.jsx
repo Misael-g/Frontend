@@ -52,7 +52,7 @@ const PanelAdmin = ({ user }) => {
 
             <div className="mb-6">
                 <h1 className="font-black text-2xl" style={{color: C.primary}}>
-                    Bienvenido, {user?.nombre ?? "admin"} 👋
+                    Bienvenido, {user?.nombre ?? "admin"} 
                 </h1>
                 <p className="text-sm mt-1" style={{color: C.muted}}>Panel de administración de UniBooks</p>
                 <hr className="my-4" style={{borderColor: C.border}} />
@@ -192,7 +192,7 @@ const PanelUsuario = ({ user }) => {
 
             <div className="mb-6">
                 <h1 className="font-black text-2xl" style={{color: C.primary}}>
-                    Bienvenido, {user?.nombre ?? "usuario"} 👋
+                    Bienvenido, {user?.nombre ?? "usuario"} 
                 </h1>
                 <p className="text-sm mt-1" style={{color: C.muted}}>Aquí tienes un resumen de tus publicaciones</p>
                 <hr className="my-4" style={{borderColor: C.border}} />
