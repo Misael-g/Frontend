@@ -56,7 +56,7 @@ const Dashboard = () => {
                 <ul className="flex-1">
                     <li>
                         <Link to='/dashboard' className={linkClass('/dashboard')}>
-                            Dashboard
+                            Inicio
                         </Link>
                     </li>
                     <li>
@@ -69,12 +69,12 @@ const Dashboard = () => {
                         <>
                             <li>
                                 <Link to='/dashboard/list' className={linkClass('/dashboard/list')}>
-                                    Libros
+                                    Explorar 
                                 </Link>
                             </li>
                             <li>
                                 <Link to='/dashboard/buscar' className={linkClass('/dashboard/buscar')}>
-                                    Buscar
+                                    Buscador 
                                 </Link>
                             </li>
                             <li>
