@@ -10,11 +10,21 @@ import { reglasRegistro } from "../utils/validaciones"
 
 export const Register = () => {
 
-    const [showPassword, setShowPassword] = useState(false)
+
+    const [showPassword,        setShowPassword]        = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const fetchDataBackend = useFetch()
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm()
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        formState: { errors }
+    } = useForm()
+
+    const passwordValue = watch("password")
 
     const registerUser = async (dataForm) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/registro`
@@ -210,6 +220,37 @@ export const Register = () => {
                                     <p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>
                                         Mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
                                     </p>
+                                )}
+                            </div>
+
+                            <div className="mb-5">
+                                <label className="unib-body block text-sm font-semibold mb-1.5"
+                                    style={{color:'var(--primary)'}}>
+                                    Confirmar contraseña <span className="text-red-500">*</span>
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="Repite tu contraseña"
+                                        className={`input-field pr-10${errors.confirmpassword ? ' input-error' : ''}`}
+                                        {...register("confirmpassword", {
+                                            required: "Debes confirmar la contraseña",
+                                            validate: v =>
+                                                v === passwordValue || "Las contraseñas no coinciden"
+                                        })}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute inset-y-0 right-3 flex items-center"
+                                        style={{color:'var(--text-muted)'}}
+                                        aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    >
+                                        {showConfirmPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                                    </button>
+                                </div>
+                                {errors.confirmpassword && (
+                                    <p className="text-red-600 text-xs mt-1">{errors.confirmpassword.message}</p>
                                 )}
                             </div>
 
