@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { ToastContainer } from "react-toastify"
 import storeProfile from "../../context/storeProfile"
 import { reglasActualizarPerfil } from "../../utils/validaciones"
 
@@ -42,7 +41,6 @@ const FormProfile = () => {
             <hr className="my-3" style={{borderColor: C.border}} />
 
             <form onSubmit={handleSubmit(updateUser)} noValidate>
-                <ToastContainer />
 
                 {/* Nombre */}
                 <div className="mb-4">
