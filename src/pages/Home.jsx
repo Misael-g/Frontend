@@ -114,6 +114,28 @@ export const Home = () => {
                     background: var(--primary);
                     color: rgba(255,255,255,0.85);
                 }
+
+                .mailto-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    background: var(--accent);
+                    color: var(--primary);
+                    font-family: 'DM Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    padding: 12px 24px;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    transition: all 0.25s;
+                    border: none;
+                    cursor: pointer;
+                }
+                .mailto-btn:hover {
+                    background: #cf8e18;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(232,160,32,0.35);
+                }
             `}</style>
 
             {/* NAVBAR */}
@@ -281,8 +303,24 @@ export const Home = () => {
                                 ¿Tienes dudas o sugerencias? Escríbenos.
                             </p>
                             <div className="flex gap-4 mt-2">
-                                <FaFacebook className="text-2xl text-blue-200 hover:text-white cursor-pointer transition-colors" />
-                                <FaSquareInstagram className="text-2xl text-blue-200 hover:text-white cursor-pointer transition-colors" />
+                                <a
+                                    href="https://www.facebook.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Facebook UniBooks"
+                                    className="text-blue-200 hover:text-white transition-colors"
+                                >
+                                    <FaFacebook className="text-2xl" />
+                                </a>
+                                <a
+                                    href="https://www.instagram.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Instagram UniBooks"
+                                    className="text-blue-200 hover:text-white transition-colors"
+                                >
+                                    <FaSquareInstagram className="text-2xl" />
+                                </a>
                             </div>
                         </div>
 
@@ -294,24 +332,17 @@ export const Home = () => {
                             <p className="text-blue-200 text-sm">Escuela Politécnica Nacional — Quito, Ecuador</p>
                         </div>
 
-                        <div className="w-full md:max-w-sm">
-                            <fieldset className="p-4 rounded-lg" style={{border:'1.5px solid rgba(255,255,255,0.15)'}}>
-                                <legend className="px-3 py-1 rounded text-sm font-semibold"
-                                    style={{background:'var(--accent)', color:'var(--primary)'}}>
-                                    Contáctanos
-                                </legend>
-                                <div className="flex gap-3 mt-2">
-                                    <input
-                                        type="email"
-                                        placeholder="Tu correo electrónico"
-                                        className="flex-1 rounded-lg px-3 py-2 text-sm bg-white/10 border border-white/20
-                                            text-white placeholder-blue-200 focus:outline-none focus:border-yellow-400"
-                                    />
-                                    <button className="btn-accent px-4 py-2 rounded-lg text-sm flex-shrink-0">
-                                        Enviar
-                                    </button>
-                                </div>
-                            </fieldset>
+                        <div className="flex flex-col gap-3">
+                            <p className="text-blue-200 text-sm max-w-xs leading-relaxed">
+                                ¿Tienes dudas, sugerencias o reportes? Escríbenos directamente y te responderemos a la brevedad.
+                            </p>
+                            <a
+                                href="mailto:unibooks08@gmail.com?subject=Consulta%20UniBooks"
+                                className="mailto-btn"
+                            >
+                                <MdEmail className="text-xl" />
+                                Escribirnos por correo
+                            </a>
                         </div>
                     </div>
 
