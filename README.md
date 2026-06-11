@@ -68,9 +68,4 @@ npm run dev
 
 La app abre en `http://localhost:5173`.
 
----
-
-└── utils/
-    └── validaciones.js   # Reglas de validación compartidas
-```
 
