@@ -70,56 +70,6 @@ La app abre en `http://localhost:5173`.
 
 ---
 
-## Estructura del proyecto
-
-```
-src/
-├── App.jsx               # Rutas principales
-├── main.jsx              # Entrada de la app
-├── index.css             # Estilos globales
-├── components/           # Componentes reutilizables
-│   ├── create/
-│   │   └── Form.jsx      # Formulario crear publicación
-│   ├── list/
-│   │   └── Table.jsx     # Tabla de publicaciones
-│   └── profile/
-│       ├── CardProfile.jsx
-│       ├── CardPassword.jsx
-│       └── FormProfile.jsx
-├── context/              # Estado global con Zustand
-│   ├── storeAuth.jsx     # Token y sesión
-│   ├── storeProfile.jsx  # Datos del usuario logueado
-│   ├── storePublicaciones.jsx
-│   └── storeAdmin.jsx
-├── hooks/
-│   └── useFetch.js       # Hook para peticiones HTTP
-├── layout/
-│   └── Dashboard.jsx     # Layout del área privada
-├── pages/                # Páginas de la app
-│   ├── Home.jsx
-│   ├── Login.jsx
-│   ├── Register.jsx
-│   ├── Forgot.jsx
-│   ├── Reset.jsx
-│   ├── Confirm.jsx
-│   ├── Panel.jsx
-│   ├── Profile.jsx
-│   ├── List.jsx
-│   ├── Details.jsx
-│   ├── Create.jsx
-│   ├── Update.jsx
-│   ├── MisPublicaciones.jsx
-│   ├── Buscador.jsx
-│   ├── AdminUsuarios.jsx
-│   ├── AdminDetalleUsuario.jsx
-│   ├── AdminPublicaciones.jsx
-│   ├── Forbidden.jsx
-│   └── NotFound.jsx
-├── routes/               # Guards de rutas
-│   ├── PublicRoute.jsx   # Solo sin sesión
-│   ├── ProtectedRoute.jsx # Solo con sesión
-│   ├── UserRoute.jsx     # Solo rol usuario
-│   └── AdminRoute.jsx    # Solo rol admin
 └── utils/
     └── validaciones.js   # Reglas de validación compartidas
 ```
