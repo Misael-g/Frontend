@@ -2,6 +2,10 @@
 
 Interfaz web de **UniBooks**, para libros universitarios de segunda mano. Construida con React, Vite y Tailwind CSS.
 
+El frontend ya está desplegado y accesible en la siguiente URL
+
+https://frontend-black-rho-37.vercel.app/ 
+
 ---
 
 ## Tecnologías
