@@ -1,6 +1,6 @@
 # UniBooks — Frontend
 
-Interfaz web de **UniBooks**, un marketplace de libros universitarios de segunda mano. Construida con React, Vite y Tailwind CSS.
+Interfaz web de **UniBooks**, para libros universitarios de segunda mano. Construida con React, Vite y Tailwind CSS.
 
 ---
 
