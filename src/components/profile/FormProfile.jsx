@@ -14,7 +14,6 @@ const FormProfile = () => {
         if (user) {
             reset({
                 nombre:   user?.nombre,
-                email:    user?.email,
                 telefono: user?.telefono,
                 carrera:  user?.carrera ?? '',
             })
@@ -60,22 +59,13 @@ const FormProfile = () => {
                     {!errors.nombre && <div className="mb-1" />}
                 </div>
 
-                {/* Email */}
+                {/* Email - solo lectura */}
                 <div className="mb-4">
                     <label className="block text-sm font-semibold mb-1.5" style={{color: C.primary}}>
-                        Correo electrónico <span className="text-red-500">*</span>
+                        Correo electrónico
                     </label>
-                    <input
-                        type="email"
-                        placeholder="Ingresa tu correo"
-                        className={fieldCls}
-                        style={errors.email ? fieldStyleError : fieldStyle}
-                        onFocus={errors.email ? onFocusError : onFocus}
-                        onBlur={errors.email ? onBlurError : onBlur}
-                        {...register("email", reglasActualizarPerfil.email)}
-                    />
-                    {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>}
-                    {!errors.email && <div className="mb-1" />}
+                    <p className="py-2 px-3 rounded-lg text-sm text-gray-700" style={{border:`1.5px solid ${C.border}`}}>{user?.email}</p>
+                    <p className="text-xs mt-1" style={{color: C.muted}}>El correo no puede ser modificado</p>
                 </div>
 
                 {/* Teléfono */}
